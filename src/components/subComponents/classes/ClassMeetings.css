@@ -1,0 +1,39 @@
+.class-meeting-container {
+  min-height: 500px;
+}
+/* ==============Meeting Logs================== */
+.new-meeting-container {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+}
+.new-meeting-left {
+  width: 30%;
+}
+.new-meeting-right {
+  width: 70%;
+  padding: 1em;
+  overflow: hidden;
+}
+.hide-right {
+  overflow: hidden !important;
+  width: 0%;
+}
+.meeting-room-options {
+  padding: 1em;
+  border-radius: 5px;
+}
+.meeting-room-header {
+  font-weight: 600;
+}
+.new-meeting-logs-right-header {
+  font-weight: 500;
+  padding: 0.5em;
+  background: var(--blue);
+  color: white;
+}
+/* ==============Meeting Logs Table================== */
+.meeting-logs-container {
+  padding: 0 1em;
+}
