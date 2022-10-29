@@ -10,6 +10,7 @@ const Chairs = ({ accountInfo }) => {
   const [filterList, setFilterList] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState({});
   const [show, setShow] = useState(false);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     loadData();
@@ -141,7 +142,8 @@ const Chairs = ({ accountInfo }) => {
                             >
                               <td>
                                 <img
-                                  src={require(`../../../../server/uploads/${list.image}`)}
+                                  src={`${api}/${list.image}`}
+                                  // src={require(`../../../../server/uploads/${list.image}`)}
                                   alt={list._id}
                                   className="assign-res-img"
                                 />
@@ -210,9 +212,12 @@ const Chairs = ({ accountInfo }) => {
                       <Fragment>
                         <td>
                           <img
-                            src={require(`../../../../server/uploads/${
+                            src={`${api}/${
                               getChairInfo(course._id)[0].account.image
-                            }`)}
+                            }`}
+                            // src={require(`../../../../server/uploads/${
+                            //   getChairInfo(course._id)[0].account.image
+                            // }`)}
                             alt={getChairInfo(course._id)[0].account.firstName}
                             className="assign-res-img"
                           />

@@ -7,6 +7,7 @@ const AllMsgsThread = ({ campusId, msgReload }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [threads, setThreads] = useState([]);
   const [accountId, setAccountId] = useState("");
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     dataLoader();
@@ -80,7 +81,8 @@ const AllMsgsThread = ({ campusId, msgReload }) => {
                 >
                   <div className="msgs-thread-content">
                     <img
-                      src={require(`../../../../../server/uploads/${thread.accountOwner.image}`)}
+                      src={`${api}/${thread.accountOwner.image}`}
+                      // src={require(`../../../../../server/uploads/${thread.accountOwner.image}`)}
                       alt=""
                       className="msgs-thread-profile"
                     />

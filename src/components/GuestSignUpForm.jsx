@@ -16,6 +16,7 @@ const GuestSignUpForm = ({ campus, genderList, vaxStatsList }) => {
   const [email, setEmail] = useState("");
   const [purpose, setPurpose] = useState("");
   const [address, setAddress] = useState("");
+  const [url] = useState(process.env.REACT_APP_URL);
 
   const courseSelection = async (chosen) => {
     const key = await fetchCampusKey(chosen.target.value);
@@ -23,9 +24,7 @@ const GuestSignUpForm = ({ campus, genderList, vaxStatsList }) => {
   };
 
   const fetchCampusKey = async (chosen) => {
-    const response = await axios.get(
-      `http://localhost:5000/ct-api/campusKey?id=${chosen}`
-    );
+    const response = await axios.get(`${url}/campusKey?id=${chosen}`);
     return await response.data;
   };
 

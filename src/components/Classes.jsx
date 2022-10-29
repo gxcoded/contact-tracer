@@ -40,6 +40,7 @@ const Classes = ({ accountInfo }) => {
   const [defaultRoom, setDefaultRoom] = useState("");
   const [roomList, setRoomList] = useState([]);
   const [showHidden, setShowHidden] = useState(false);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     loadData();
@@ -529,7 +530,8 @@ const Classes = ({ accountInfo }) => {
                         className="second-section-card border"
                       >
                         <img
-                          src={require(`../../../server/icons/${list.description}`)}
+                          src={`${api}/${list.description}`}
+                          // src={require(`../../../server/icons/${list.description}`)}
                           alt={list._id}
                           className="class-icon-options"
                         />
@@ -643,7 +645,8 @@ const Classes = ({ accountInfo }) => {
                               className="class-card-details"
                             >
                               <img
-                                src={require(`../../../server/icons/${list.icon.description}`)}
+                                src={`${api}/${list.icon.description}`}
+                                // src={require(`../../../server/icons/${list.icon.description}`)}
                                 alt="as"
                                 className="class-render-img"
                               />
@@ -697,7 +700,8 @@ const Classes = ({ accountInfo }) => {
                               className="class-card-details"
                             >
                               <img
-                                src={require(`../../../server/icons/${list.icon.description}`)}
+                                src={`${api}/${list.icon.description}`}
+                                // src={require(`../../../server/icons/${list.icon.description}`)}
                                 alt="as"
                                 className="class-render-img"
                               />

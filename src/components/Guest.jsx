@@ -20,6 +20,8 @@ const Guest = ({ vaxStatsList, genderList }) => {
   const [profile, setProfile] = useState(true);
   const [credentials, setCredentials] = useState(false);
   const [movements, setMovements] = useState(false);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [url] = useState(process.env.REACT_APP_URL);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -39,10 +41,7 @@ const Guest = ({ vaxStatsList, genderList }) => {
   //get account Information
   const getInfo = async () => {
     const id = localStorage.getItem("ctIdToken");
-    const response = await axios.post(
-      "http://localhost:5000/ct-api/accountInfo",
-      { id: id }
-    );
+    const response = await axios.post(`${url}/accountInfo`, { id: id });
 
     return await response.data;
   };
@@ -90,7 +89,7 @@ const Guest = ({ vaxStatsList, genderList }) => {
                 <hr className="mt-5" />
                 <div className="admin-label my-4">
                   <img
-                    src={require(`../../../server/uploads/${accountInfo.image}`)}
+                    src={`${api}/${accountInfo.image}`}
                     alt="img"
                     className="me-3"
                   />
@@ -180,7 +179,7 @@ const Guest = ({ vaxStatsList, genderList }) => {
                             <div className="profile-upper-section">
                               <div className="profile-name">
                                 <img
-                                  src={require(`../../../server/uploads/${accountInfo.image}`)}
+                                  src={`${api}/${accountInfo.image}`}
                                   alt="profile"
                                   className="profile-image"
                                 />

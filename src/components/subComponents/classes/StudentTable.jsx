@@ -7,6 +7,8 @@ const StudentTable = ({ room, classStudents, studentList, loadStudents }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -91,7 +93,8 @@ const StudentTable = ({ room, classStudents, studentList, loadStudents }) => {
                       <tr>
                         <td>
                           <img
-                            src={require(`../../../../../server/uploads/${list.image}`)}
+                            src={`${api}/${list.image}`}
+                            // src={require(`../../../../../server/uploads/${list.image}`)}
                             alt={list._id}
                             className="table-image"
                           />

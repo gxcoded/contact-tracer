@@ -8,6 +8,8 @@ const StudentList = ({ campus, courseList }) => {
   const [sendLink, setSendLink] = useState(false);
   const [studentList, setStudentList] = useState([]);
   const [filterList, setFilterList] = useState([]);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [url] = useState(process.env.REACT_APP_URL);
 
   useEffect(() => {
     const loadData = async () => {
@@ -20,10 +22,9 @@ const StudentList = ({ campus, courseList }) => {
   }, []);
 
   const fetchList = async () => {
-    const response = await axios.post(
-      "http://localhost:5000/ct-api/getStudents",
-      { campus: campus._id }
-    );
+    const response = await axios.post(`${url}/getStudents`, {
+      campus: campus._id,
+    });
     const data = await response.data;
 
     return data;
@@ -36,13 +37,10 @@ const StudentList = ({ campus, courseList }) => {
   };
 
   const search = async (keyword) => {
-    const result = await axios.post(
-      "http://localhost:5000/ct-api/searchStudents",
-      {
-        keyword,
-        campus: campus._id,
-      }
-    );
+    const result = await axios.post(`${url}/searchStudents`, {
+      keyword,
+      campus: campus._id,
+    });
 
     const data = await result.data;
 
@@ -159,7 +157,8 @@ const StudentList = ({ campus, courseList }) => {
                     <tr key={list._id}>
                       <td>
                         <img
-                          src={require(`../../../../server/uploads/${list.image}`)}
+                          src={`${api}/${list.image}`}
+                          // src={require(`../../../../server/uploads/${list.image}`)}
                           alt={list._id}
                           className="table-image"
                         />

@@ -10,6 +10,7 @@ const ContactTracer = ({ campus }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [current, setCurrent] = useState({});
   const [viewContacts, setViewContacts] = useState(false);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   const submitSearch = async (e) => {
     e.preventDefault();
@@ -134,7 +135,8 @@ const ContactTracer = ({ campus }) => {
                     <tr key={list._id}>
                       <td>
                         <img
-                          src={require(`../../../../server/uploads/${list.image}`)}
+                          src={`${api}/${list.image}`}
+                          // src={require(`../../../../server/uploads/${list.image}`)}
                           alt={list._id}
                           className="table-image"
                         />

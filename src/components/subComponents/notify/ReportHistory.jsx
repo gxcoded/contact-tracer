@@ -5,6 +5,7 @@ import axios from "axios";
 const ReportHistory = ({ accountInfo }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [messages, setMessages] = useState([]);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     loadMessages();
@@ -40,7 +41,8 @@ const ReportHistory = ({ accountInfo }) => {
         {messages.map((msg) => (
           <div className="sent-message">
             <img
-              src={require(`../../../../../server/uploads/${msg.imgProof}`)}
+              src={`${api}/${msg.imgProof}`}
+              // src={require(`../../../../../server/uploads/${msg.imgProof}`)}
               alt={msg._id}
               className="sent-message-img"
             />

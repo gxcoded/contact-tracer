@@ -16,6 +16,7 @@ const Profile = ({ accountInfo, vaxStatsList, genderList, type }) => {
   const [phoneNumber, setPhoneNumber] = useState(accountInfo.phoneNumber);
   const [email, setEmail] = useState(accountInfo.email);
   const [address, setAddress] = useState(accountInfo.address);
+  const [url] = useState(process.env.REACT_APP_URL);
 
   useEffect(() => {
     const getCourses = async () => {
@@ -30,29 +31,25 @@ const Profile = ({ accountInfo, vaxStatsList, genderList, type }) => {
   }, []);
 
   const fetchCourses = async () => {
-    const response = await axios.post(
-      "http://localhost:5000/ct-api/courseList",
-      { campus: accountInfo.campus._id }
-    );
+    const response = await axios.post(`${url}/courseList`, {
+      campus: accountInfo.campus._id,
+    });
     return await response.data;
   };
   const formSubmit = async (e) => {
     e.preventDefault();
 
-    const postRequest = await axios.post(
-      "http://localhost:5000/ct-api/updateAccountInfo",
-      {
-        id: accountInfo._id,
-        course,
-        firstName,
-        lastName,
-        gender,
-        vaxStats,
-        phoneNumber,
-        email,
-        address,
-      }
-    );
+    const postRequest = await axios.post(`${url}/updateAccountInfo`, {
+      id: accountInfo._id,
+      course,
+      firstName,
+      lastName,
+      gender,
+      vaxStats,
+      phoneNumber,
+      email,
+      address,
+    });
     const isUpdated = await postRequest.data;
     if (isUpdated) {
       swal({

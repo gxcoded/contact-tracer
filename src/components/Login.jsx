@@ -9,6 +9,7 @@ const Login = () => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [url] = useState(process.env.REACT_APP_URL);
 
   useEffect(() => {
     localStorage.removeItem("ctToken");
@@ -21,7 +22,7 @@ const Login = () => {
 
   const checkLogin = async (e) => {
     e.preventDefault();
-    const response = await axios.post("http://localhost:5000/ct-api/login", {
+    const response = await axios.post(`${url}/login`, {
       username: username,
       password: password,
     });

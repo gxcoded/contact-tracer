@@ -56,6 +56,7 @@ const SchoolAdmin = () => {
   const [assign, setAssign] = useState(false);
   const [messages, setMessages] = useState([]);
   const [showMsgs, setShowMsgs] = useState(false);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -185,7 +186,7 @@ const SchoolAdmin = () => {
                 <hr className="mt-5" />
                 <div className="admin-label my-4">
                   <img
-                    src={require(`../../../server/uploads/${accountInfo.image}`)}
+                    src={`${api}/${accountInfo.image}`}
                     alt="img"
                     className="me-3"
                   />

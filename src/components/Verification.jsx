@@ -10,6 +10,7 @@ import swal from "sweetalert";
 const Verification = () => {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(true);
+  const [url] = useState(process.env.REACT_APP_URL);
 
   useEffect(() => {
     setTimeout(() => {
@@ -19,13 +20,10 @@ const Verification = () => {
 
   const submitCode = async () => {
     const hash = localStorage.getItem("ctToken");
-    const response = await axios.post(
-      `http://localhost:5000/ct-api/authenticate`,
-      {
-        hash,
-        code,
-      }
-    );
+    const response = await axios.post(`${url}/authenticate`, {
+      hash,
+      code,
+    });
     return await response.data;
   };
 

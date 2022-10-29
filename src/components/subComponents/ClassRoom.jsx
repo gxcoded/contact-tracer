@@ -8,6 +8,7 @@ const ClassRoom = ({ room, options }) => {
   const [students, setStudents] = useState(false);
   const [attendance, setAttendance] = useState(false);
   const [meetings, setMeetings] = useState(true);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   const toggleActive = (target) => {
     const links = document.querySelectorAll(".class-nav-links");
@@ -31,7 +32,8 @@ const ClassRoom = ({ room, options }) => {
       <div className="class-room-header ">
         <div className="class-room-header-left">
           <img
-            src={require(`../../../../server/icons/${room.icon.description}`)}
+            src={`${api}/${room.icon.description}`}
+            // src={require(`../../../../server/icons/${room.icon.description}`)}
             alt=""
             className="class-icon-display"
           />

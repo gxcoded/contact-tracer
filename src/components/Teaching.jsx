@@ -37,6 +37,7 @@ const Teaching = () => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [assignedRoom] = useState({});
   const [scan, setScan] = useState(false);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -121,7 +122,7 @@ const Teaching = () => {
                 <hr className="mt-5" />
                 <div className="admin-label my-4">
                   <img
-                    src={require(`../../../server/uploads/${accountInfo.image}`)}
+                    src={`${api}/${accountInfo.image}`}
                     alt="img"
                     className="me-3"
                   />

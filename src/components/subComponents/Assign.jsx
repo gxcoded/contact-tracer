@@ -12,6 +12,7 @@ const Assign = ({ accountInfo }) => {
   const [current, setCurrent] = useState({});
   const [showPopUp, setShowPopUp] = useState(false);
   const [currentRoom, setCurrentRoom] = useState("");
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   const fetchList = async () => {
     const { data } = await axios.post(`${url}/getNonTeachingAccounts`, {
@@ -84,7 +85,8 @@ const Assign = ({ accountInfo }) => {
             <div>
               <div className="assign-room-form-header">Designate</div>
               <img
-                src={require(`../../../../server/uploads/${current.image}`)}
+                src={`${api}/${current.image}`}
+                // src={require(`../../../../server/uploads/${current.image}`)}
                 alt={current._id}
                 className="table-image"
               />
@@ -167,7 +169,8 @@ const Assign = ({ accountInfo }) => {
                   <tr key={list._id}>
                     <td>
                       <img
-                        src={require(`../../../../server/uploads/${list.image}`)}
+                        src={`${api}/${list.image}`}
+                        // src={require(`../../../../server/uploads/${list.image}`)}
                         alt={list._id}
                         className="table-image"
                       />

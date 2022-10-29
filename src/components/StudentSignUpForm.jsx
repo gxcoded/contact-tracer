@@ -22,6 +22,8 @@ const StudentSignUpForm = ({ vaxStatsList, genderList, campus }) => {
   const [address, setAddress] = useState("");
   const [params] = useSearchParams();
   const [valid, setValidity] = useState(true);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [url] = useState(process.env.REACT_APP_URL);
 
   useEffect(() => {
     (params.get("campus") === null || params.get("hash") === null) &&
@@ -49,7 +51,7 @@ const StudentSignUpForm = ({ vaxStatsList, genderList, campus }) => {
     const campus = params.get("campus");
     const hash = params.get("hash");
 
-    const response = await axios.post("http://localhost:5000/ct-api/getLink", {
+    const response = await axios.post(`${url}/getLink`, {
       campus,
       hash,
     });
@@ -58,17 +60,12 @@ const StudentSignUpForm = ({ vaxStatsList, genderList, campus }) => {
   };
 
   const fetchCourses = async (id) => {
-    const response = await axios.post(
-      "http://localhost:5000/ct-api/courseList",
-      { campus: id }
-    );
+    const response = await axios.post(`${url}/courseList`, { campus: id });
     return await response.data;
   };
 
   const fetchCampusKey = async (chosen) => {
-    const response = await axios.get(
-      `http://localhost:5000/ct-api/campusKey?id=${chosen}`
-    );
+    const response = await axios.get(`${url}/campusKey?id=${chosen}`);
     return await response.data;
   };
 
@@ -118,27 +115,20 @@ const StudentSignUpForm = ({ vaxStatsList, genderList, campus }) => {
         formData.append("address", address);
         formData.append("role", "62cb91ba2c5804049b716d49");
 
-        const response = await axios.post(
-          "http://localhost:5000/ct-api/checkId",
-          {
-            userId: idNumber,
-          }
-        );
+        const response = await axios.post(`${url}/checkId`, {
+          userId: idNumber,
+        });
         const exist = await response.data;
 
         if (exist) {
           swal("The Id Number you Entered is Already registered.");
         } else {
           try {
-            const res = await axios.post(
-              "http://localhost:5000/ct-api/preRegister",
-              formData,
-              {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-              }
-            );
+            const res = await axios.post(`${url}/preRegister`, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
             const key = await res.data;
             localStorage.setItem("ctToken", key);
             window.location.href = "/verify";

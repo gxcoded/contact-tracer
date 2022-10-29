@@ -12,6 +12,8 @@ const ShowInteractions = ({
   const [allLogs, setAllLogs] = useState([]);
   const [results, setResults] = useState([]);
 
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
+
   useEffect(() => {
     loadLogs();
     // console.log(currentAccount);
@@ -78,7 +80,8 @@ const ShowInteractions = ({
           <div className="s-i-m-profile border">
             <div className="current-img-container">
               <img
-                src={require(`../../../../server/uploads/${currentAccount.image}`)}
+                src={`${api}/${currentAccount.image}`}
+                // src={require(`../../../../server/uploads/${currentAccount.image}`)}
                 alt={currentAccount._id}
                 className="interactions-current-img"
               />
@@ -146,7 +149,8 @@ const ShowInteractions = ({
                               <tr key={r._id}>
                                 <td>
                                   <img
-                                    src={require(`../../../../server/uploads/${r.accountScanned.image}`)}
+                                    src={`${api}/${r.accountScanned.image}`}
+                                    // src={require(`../../../../server/uploads/${r.accountScanned.image}`)}
                                     alt={r._id}
                                     className="table-image"
                                   />

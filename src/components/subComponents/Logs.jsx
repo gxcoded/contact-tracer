@@ -5,6 +5,7 @@ import swal from "sweetalert";
 
 const Logs = ({ accountInfo, url, reLoad }) => {
   const [logList, setLogList] = useState([]);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     logs();
@@ -62,7 +63,8 @@ const Logs = ({ accountInfo, url, reLoad }) => {
               <div className="log-card-image">
                 <img
                   className="scan-result-box-image"
-                  src={require(`../../../../server/uploads/${list.accountScanned.image}`)}
+                  src={`${api}/${list.accountScanned.image}`}
+                  // src={require(`../../../../server/uploads/${list.accountScanned.image}`)}
                   alt={list._id}
                 />
               </div>

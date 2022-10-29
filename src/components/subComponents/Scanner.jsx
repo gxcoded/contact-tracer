@@ -12,6 +12,7 @@ const Scanner = ({ accountInfo }) => {
   const [timeIn, setTimeIn] = useState(true);
   const [allowed, setAllowed] = useState(true);
   const [location, setLocation] = useState("");
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     console.log(accountInfo);
@@ -78,7 +79,8 @@ const Scanner = ({ accountInfo }) => {
             <div className="scan-result-box-image-section">
               <img
                 className="scan-result-box-image"
-                src={require(`../../../../server/uploads/${accountInfo.image}`)}
+                src={`${api}/${accountInfo.image}`}
+                // src={require(`../../../../server/uploads/${accountInfo.image}`)}
                 alt="pp"
               />
               <div className="result-idNumber">{accountInfo.username}</div>

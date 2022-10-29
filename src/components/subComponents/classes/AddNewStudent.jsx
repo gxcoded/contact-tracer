@@ -6,6 +6,7 @@ import swal from "sweetalert";
 const AddNewStudent = ({ room, classStudents, loadStudents }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [searchResults, setSearchResults] = useState([]);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   const search = async (keyword) => {
     if (keyword.length > 0) {
@@ -69,7 +70,8 @@ const AddNewStudent = ({ room, classStudents, loadStudents }) => {
                 <tr key={list._id}>
                   <td>
                     <img
-                      src={require(`../../../../../server/uploads/${list.image}`)}
+                      src={`${api}/${list.image}`}
+                      // src={require(`../../../../../server/uploads/${list.image}`)}
                       alt={list._id}
                       className="table-image"
                     />

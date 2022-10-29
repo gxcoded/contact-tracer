@@ -24,6 +24,7 @@ const NonTeaching = () => {
   const [updated, setUpdated] = useState(false);
   const [walkIn, setWalkIn] = useState(false);
   const [assignedRoom, setAssignedRoom] = useState({});
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -112,7 +113,7 @@ const NonTeaching = () => {
                 <hr className="mt-5" />
                 <div className="admin-label my-4">
                   <img
-                    src={require(`../../../server/uploads/${accountInfo.image}`)}
+                    src={`${api}/${accountInfo.image}`}
                     alt="img"
                     className="me-3"
                   />

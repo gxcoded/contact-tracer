@@ -4,6 +4,7 @@ import ShowInteractions from "./ShowInteractions";
 import { useState, useEffect, Fragment } from "react";
 
 const Interactions = ({ current, toggleView }) => {
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
   const [showInteractions, setShowInteractions] = useState(false);
   const [contacts, setContacts] = useState([]);
   const [url] = useState(process.env.REACT_APP_URL);
@@ -145,7 +146,8 @@ const Interactions = ({ current, toggleView }) => {
               <div className="interactions-main-left-card">
                 <div className="current-img-container">
                   <img
-                    src={require(`../../../../server/uploads/${current.image}`)}
+                    src={`${api}/${current.image}`}
+                    // src={require(`../../../../server/uploads/${current.image}`)}
                     alt={current._id}
                     className="interactions-current-img"
                   />

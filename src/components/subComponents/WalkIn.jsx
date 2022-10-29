@@ -26,6 +26,7 @@ const WalkIn = ({ accountInfo }) => {
   const [purpose, setPurpose] = useState("");
   const [vaxStats, setVaxStats] = useState("");
   const [walkInList, setWalkInList] = useState([]);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     fetchData();
@@ -346,7 +347,8 @@ const WalkIn = ({ accountInfo }) => {
                   <tr key={list._id}>
                     <td>
                       <img
-                        src={require(`../../../../server/uploads/${list.image}`)}
+                        src={`${api}/${list.image}`}
+                        // src={require(`../../../../server/uploads/${list.image}`)}
                         alt="alt"
                         className="recent-logs-img"
                       />

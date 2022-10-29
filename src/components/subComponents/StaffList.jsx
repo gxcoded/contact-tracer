@@ -12,6 +12,7 @@ const StaffList = ({ accountInfo, roles }) => {
   const [currentLocation, setCurrentLocation] = useState({});
   const [url] = useState(process.env.REACT_APP_URL);
   const [currentName, setCurrentName] = useState({});
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   const fetchList = async () => {
     const response = await axios.post(`${url}/staffAccounts`, {
@@ -222,7 +223,8 @@ const StaffList = ({ accountInfo, roles }) => {
                     <tr key={list._id}>
                       <td>
                         <img
-                          src={require(`../../../../server/uploads/${list.image}`)}
+                          src={`${api}/${list.image}`}
+                          // src={require(`../../../../server/uploads/${list.image}`)}
                           alt={list._id}
                           className="table-image"
                         />

@@ -6,6 +6,7 @@ const Thread = ({ accountId, toggleThread }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [threads, setThreads] = useState([]);
   const [reply, setReply] = useState("");
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   const loadThread = async () => {
     const msgs = await fetchMessages();
@@ -84,7 +85,8 @@ const Thread = ({ accountId, toggleThread }) => {
           <Fragment key={thread._id}>
             <div className="single-thread-main-profile mt-3">
               <img
-                src={require(`../../../../../server/uploads/${thread.accountOwner.image}`)}
+                src={`${api}/${thread.accountOwner.image}`}
+                // src={require(`../../../../../server/uploads/${thread.accountOwner.image}`)}
                 alt="$$$"
                 className="msgs-thread-profile"
               />
@@ -148,7 +150,8 @@ const Thread = ({ accountId, toggleThread }) => {
                 <div className="img-proof-wrap">
                   {
                     <img
-                      src={require(`../../../../../server/uploads/${thread.imgProof}`)}
+                      src={`${api}/${thread.imgProof}`}
+                      // src={require(`../../../../../server/uploads/${thread.imgProof}`)}
                       alt={thread._id}
                       className="single-thread-img-proof"
                     />

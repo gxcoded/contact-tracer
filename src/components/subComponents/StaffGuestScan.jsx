@@ -21,6 +21,7 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
   const [details, setDetails] = useState({});
   const [selectedRoom, setSelectedRoom] = useState({});
   const [pending, setPending] = useState([]);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   const loadData = async () => {
     const rooms = await fetchList();
@@ -218,7 +219,8 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
               <div className="scan-result-box-image-section">
                 <img
                   className="scan-result-box-image"
-                  src={require(`../../../../server/uploads/${details.image}`)}
+                  src={`${api}/${details.image}`}
+                  // src={require(`../../../../server/uploads/${details.image}`)}
                   alt="pp"
                 />
                 <div className="result-idNumber">{details.username}</div>

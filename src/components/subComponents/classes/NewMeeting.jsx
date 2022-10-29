@@ -20,6 +20,7 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
   const [currentMeetingId, setCurrentMeetingId] = useState("");
   const [loading, setLoading] = useState(false);
   const [url] = useState(process.env.REACT_APP_URL);
+  const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
     loadData();
@@ -290,7 +291,8 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
                   <tr>
                     <td>
                       <img
-                        src={require(`../../../../../server/uploads/${list.accountScanned.image}`)}
+                        src={`${api}/${list.accountScanned.image}`}
+                        // src={require(`../../../../../server/uploads/${list.accountScanned.image}`)}
                         alt={list._id}
                         className="table-image"
                       />
@@ -333,7 +335,8 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
                   <tr>
                     <td>
                       <img
-                        src={require(`../../../../../server/uploads/${list.accountScanned.image}`)}
+                        src={`${api}/${list.accountScanned.image}`}
+                        // src={require(`../../../../../server/uploads/${list.accountScanned.image}`)}
                         alt={list._id}
                         className="table-image"
                       />
@@ -376,7 +379,8 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
                   <tr>
                     <td>
                       <img
-                        src={require(`../../../../../server/uploads/${list.accountScanned.image}`)}
+                        src={`${api}/${list.accountScanned.image}`}
+                        // src={require(`../../../../../server/uploads/${list.accountScanned.image}`)}
                         alt={list._id}
                         className="table-image"
                       />
