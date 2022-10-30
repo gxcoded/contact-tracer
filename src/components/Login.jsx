@@ -31,7 +31,7 @@ const Login = () => {
   const checkLogin = async (e) => {
     e.preventDefault();
     const data = await sendRequest();
-
+    console.log(data);
     if (Object.keys(data).length === 0) {
       swal("Login Failed!", "Account not Found", "error");
       resetFields();
