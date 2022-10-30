@@ -20,15 +20,19 @@ const Login = () => {
     }, 2000);
   }, []);
 
-  const checkLogin = async (e) => {
-    e.preventDefault();
-    const response = await axios.post(`${url}/login`, {
+  const sendRequest = async () => {
+    const { data } = await axios.post(`${url}/login`, {
       username: username,
       password: password,
     });
-    const data = await response.data;
+    return data;
+  };
 
-    if (Object.keys(await data).length === 0) {
+  const checkLogin = async (e) => {
+    e.preventDefault();
+    const data = await sendRequest();
+
+    if (Object.keys(data).length === 0) {
       swal("Login Failed!", "Account not Found", "error");
       resetFields();
     } else {
@@ -51,7 +55,7 @@ const Login = () => {
           window.location.href = "/guest-account";
           break;
         default:
-          swal("Login Failed!", "Account not Found", "error");
+          swal("Login Failed!", "Account not Found!", "error");
           resetFields();
       }
     }
