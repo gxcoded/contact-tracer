@@ -25,21 +25,14 @@ const App = () => {
   const [genderList, setGenderList] = useState([]);
   const [vaxStatsList, setVaxStatsList] = useState([]);
   const [role, setRole] = useState([]);
+  const [url] = useState(process.env.REACT_APP_URL);
 
   useEffect(() => {
     const serveList = async () => {
-      const fetchedCampuses = await fetchList(
-        "http://localhost:5000/ct-api/campusList"
-      );
-      const fetchedVaxStatus = await fetchList(
-        "http://localhost:5000/ct-api/getVaxStatus"
-      );
-      const fetchedGender = await fetchList(
-        "http://localhost:5000/ct-api/getGender"
-      );
-      const fetchedRole = await fetchList(
-        "http://localhost:5000/ct-api/getRole"
-      );
+      const fetchedCampuses = await fetchList(`${url}/campusList`);
+      const fetchedVaxStatus = await fetchList(`${url}/getVaxStatus`);
+      const fetchedGender = await fetchList(`${url}/getGender`);
+      const fetchedRole = await fetchList(`${url}/getRole`);
 
       setCampus(fetchedCampuses);
       setVaxStatsList(fetchedVaxStatus);
