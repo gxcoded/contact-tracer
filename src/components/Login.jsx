@@ -15,6 +15,7 @@ const Login = () => {
     localStorage.removeItem("ctToken");
     localStorage.removeItem("ctIdToken");
     localStorage.removeItem("hashCodeToken");
+    console.log(url);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
