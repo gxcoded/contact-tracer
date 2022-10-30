@@ -28,7 +28,7 @@ const Login = () => {
     });
     const data = await response.data;
 
-    if (Object.keys(data).length === 0) {
+    if (Object.keys(await data).length === 0) {
       swal("Login Failed!", "Account not Found", "error");
       resetFields();
     } else {
@@ -56,6 +56,7 @@ const Login = () => {
       }
     }
   };
+
   const resetFields = () => {
     setUsername("");
     setPassword("");
