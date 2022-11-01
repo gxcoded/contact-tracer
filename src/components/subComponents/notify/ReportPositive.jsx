@@ -1,13 +1,14 @@
 import "./ReportPositive.css";
 import Image from "../../../assets/images/nfw.png";
 import DefaultImage from "../../../assets/images/dimg.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import swal from "sweetalert";
 
 const ReportPositive = ({ accountInfo }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [file, setFile] = useState("");
+  const [adminInfo, setAdminInfo] = useState({});
   const [dateTested, setDateTested] = useState(
     new Date().toISOString().toString().slice(0, 10)
   );
@@ -19,6 +20,24 @@ const ReportPositive = ({ accountInfo }) => {
   const [defaultDate] = useState(
     new Date().toISOString().toString().slice(0, 10)
   );
+
+  useEffect(() => {
+    loadAdminInfo();
+  }, []);
+
+  const loadAdminInfo = async () => {
+    const info = await fetchAdminInfo();
+    console.log(info);
+    setAdminInfo(info);
+  };
+
+  const fetchAdminInfo = async () => {
+    const { data } = await axios.post(`${url}/getAdminAccount`, {
+      campus: accountInfo.campus._id,
+    });
+
+    return data;
+  };
 
   const previewImage = (e) => {
     const preview = document.querySelector("#preview");
@@ -49,6 +68,8 @@ const ReportPositive = ({ accountInfo }) => {
         formData.append("lastVisit", new Date(lastVisited).getTime());
         formData.append("dateSent", Date.now().toString());
         formData.append("message", message);
+        formData.append("adminNumber", adminInfo.phoneNumber);
+        formData.append("adminEmail", adminInfo.email);
 
         try {
           const res = await axios.post(`${url}/reportPositive`, formData, {

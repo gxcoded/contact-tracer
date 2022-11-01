@@ -17,11 +17,36 @@
 }
 .contact-tracer-card {
   height: 200px;
-  width: 200px;
+  width: 300px;
   border-radius: 20px;
   box-shadow: var(--shadowColorLight);
   margin: 0 1em;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-left: 5px solid var(--red);
+}
+
+.contact-tracer-search {
+  height: 200px;
+  width: 500px;
+  border-radius: 20px;
+  /* box-shadow: var(--shadowColorLight); */
+  margin: 0 1em;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.contact-tracer-card-counter {
+  font-size: 3em;
+  font-weight: 500;
+}
+.contact-tracer-card-label {
+  font-weight: 500;
 }
 .contact-tracer-main {
   display: flex;
@@ -85,10 +110,10 @@
   border-radius: 20px;
 }
 .tracer-calendar-icon {
-  font-size: 6em;
+  font-size: 3em;
+  color: var(--red);
 }
 .tracer-calendar-date {
-  font-size: 1.2em;
   font-weight: bold;
   text-transform: uppercase;
 }

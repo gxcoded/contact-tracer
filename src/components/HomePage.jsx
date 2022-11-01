@@ -22,9 +22,6 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-      {/* # REACT_APP_URL = http://localhost:5000/ct-api # REACT_APP_API_SERVER =
-      http://localhost:5000/uploads # REACT_APP_API_SERVER =
-      https://rose-shrimp-wear.cyclic.app/uploads */}
     </div>
   );
 };

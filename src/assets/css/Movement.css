@@ -104,6 +104,12 @@
   }
   .movement-main-right {
     width: 100%;
+    height: 600px;
+  }
+}
+@media (max-width: 460px) {
+  .travel-box {
+    width: 100%;
   }
 }
 @media (max-width: 400px) {

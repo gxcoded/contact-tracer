@@ -455,7 +455,10 @@ const SchoolAdmin = () => {
                 </div>
                 <div className="sudo-right-main">
                   {contactTrace && (
-                    <ContactTracer campus={accountInfo.campus._id} />
+                    <ContactTracer
+                      campus={accountInfo.campus._id}
+                      roles={roles}
+                    />
                   )}
                   {dashboard && (
                     <SchoolAdminDashboard accountInfo={accountInfo} />
