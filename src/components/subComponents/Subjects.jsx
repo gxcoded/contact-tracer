@@ -157,6 +157,22 @@ const Subjects = ({ accountInfo, courseInfo }) => {
     });
   };
 
+  const isUpdated = async (list) => {
+    const { data } = await axios.post(`${url}/updateSubjectStatus`, {
+      id: list._id,
+      isOpen: !list.isOpen,
+    });
+    console.log(data);
+    return data;
+  };
+
+  const updateStatus = async (list) => {
+    if (await isUpdated(list)) {
+      swal("Status Updated!", {
+        icon: "success",
+      });
+    }
+  };
   return (
     <div className="subjects-container">
       <div className={`subject-pop-container ${addNew && "pop-show"}`}>
@@ -227,103 +243,150 @@ const Subjects = ({ accountInfo, courseInfo }) => {
                 ))}
             </ul>
           </div> */}
-          {showSem && (
-            <div className="subject-cols second-col ">
-              <div className="subject-cols-title">Semester</div>
-              <ul className="list-group list-group-light subjects-ul">
-                {semesters.length > 0 &&
-                  semesters.map((list) => (
-                    <li
-                      key={list._id}
-                      className="list-group-item subject-cols-li"
-                    >
-                      <div
-                        onClick={(e) => toggleLevel(list._id, e.target)}
-                        className="subject-li-btn sm-list"
+          <div className="left-col">
+            {showSem && (
+              <div className="subject-cols second-col ">
+                <div className="subject-cols-title">Semester</div>
+                <ul className="list-group list-group-light subjects-ul">
+                  {semesters.length > 0 &&
+                    semesters.map((list) => (
+                      <li
+                        key={list._id}
+                        className="list-group-item subject-cols-li"
                       >
-                        <Fragment>{list.description}</Fragment>
+                        <div
+                          onClick={(e) => toggleLevel(list._id, e.target)}
+                          className="subject-li-btn sm-list"
+                        >
+                          <Fragment>{list.description}</Fragment>
 
-                        <i className="fas fa-angle-double-right"></i>
-                      </div>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          )}
-          {showLevel && (
-            <div className="subject-cols second-col ">
-              <div className="subject-cols-title">Year Level</div>
-              <ul className="list-group list-group-light subjects-ul">
-                {yearLevels.length > 0 &&
-                  yearLevels.map((list) => (
-                    <li
-                      key={list._id}
-                      className="list-group-item subject-cols-li"
-                    >
-                      <div
-                        onClick={(e) => toggleSections(list._id, e.target)}
-                        className="subject-li-btn yl-list"
+                          <i className="fas fa-angle-double-right"></i>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            )}
+            {showLevel && (
+              <div className="subject-cols second-col ">
+                <div className="subject-cols-title">Year Level</div>
+                <ul className="list-group list-group-light subjects-ul">
+                  {yearLevels.length > 0 &&
+                    yearLevels.map((list) => (
+                      <li
+                        key={list._id}
+                        className="list-group-item subject-cols-li"
                       >
-                        <Fragment>{list.description}</Fragment>
+                        <div
+                          onClick={(e) => toggleSections(list._id, e.target)}
+                          className="subject-li-btn yl-list"
+                        >
+                          <Fragment>{list.description}</Fragment>
 
-                        <i className="fas fa-angle-double-right"></i>
-                      </div>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          )}
+                          <i className="fas fa-angle-double-right"></i>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            )}
+          </div>
           {showSubjects && (
             <div className="subject-cols-main second-col ">
-              <div className="sub-table-title">
-                <div className="subject-cols-title ">Subjects</div>
-                <span
-                  onClick={() => {
-                    setCurrentId("");
-                    setAddNew(true);
-                  }}
-                  className="add-sub-btn"
-                >
-                  <i className="fas fa-plus me-1"></i>New
-                </span>
-              </div>
-              <table className="table table-bordered">
-                <tbody>
-                  {subjects.length > 0 ? (
-                    subjects.map((list) => (
-                      <tr key={list._id}>
-                        <td>{list.courseCode}</td>
-                        <td>{list.courseDescription}</td>
-                        <td>
-                          <div className="table-options justify-content-center">
-                            <span
-                              onClick={() => {
-                                setCurrentId(list._id);
-                                setCourseCode(list.courseCode);
-                                setCourseDescription(list.courseDescription);
-                                setAddNew(true);
-                              }}
-                              className="option-edit me-3"
-                            >
-                              <i className="fas fa-edit"></i>
-                            </span>
-                            <span
-                              onClick={() => deleteSubject(list._id)}
-                              className="option-delete"
-                            >
-                              <i className="fas fa-trash-alt"></i>
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
+              <div className="subjects-col-table">
+                <div className="sub-table-title">
+                  <div className="subject-cols-title ">Subjects</div>
+                  <span
+                    onClick={() => {
+                      setCurrentId("");
+                      setAddNew(true);
+                    }}
+                    className="add-sub-btn"
+                  >
+                    <i className="fas fa-plus me-1"></i>New
+                  </span>
+                </div>
+                <table className="table table-bordered">
+                  <thead>
                     <tr>
-                      <td>No Subjects Yet..</td>
+                      <th className="fw-bold" scope="col">
+                        Course Code
+                      </th>
+                      <th className="fw-bold" scope="col">
+                        Description
+                      </th>
+                      <th className="fw-bold" scope="col">
+                        is Open
+                      </th>
+                      <th className="fw-bold text-center" scope="col">
+                        <i className="ms-2 fas fas fa-tools"></i>
+                      </th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {subjects.length > 0 ? (
+                      subjects.map((list) => (
+                        <tr key={list._id}>
+                          <td>{list.courseCode}</td>
+                          <td>{list.courseDescription}</td>
+                          <td>
+                            {list.isOpen ? (
+                              <div className="form-check form-switch">
+                                <input
+                                  onChange={() => {
+                                    updateStatus(list);
+                                  }}
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  role="switch"
+                                  defaultChecked={true}
+                                />
+                              </div>
+                            ) : (
+                              <div className="form-check form-switch">
+                                <input
+                                  onChange={() => {
+                                    updateStatus(list);
+                                  }}
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  role="switch"
+                                  defaultChecked={false}
+                                />
+                              </div>
+                            )}
+                          </td>
+                          <td>
+                            <div className="table-options justify-content-center">
+                              <span
+                                onClick={() => {
+                                  setCurrentId(list._id);
+                                  setCourseCode(list.courseCode);
+                                  setCourseDescription(list.courseDescription);
+                                  setAddNew(true);
+                                }}
+                                className="option-edit me-3"
+                              >
+                                <i className="fas fa-edit"></i>
+                              </span>
+                              {/* <span
+                                onClick={() => deleteSubject(list._id)}
+                                className="option-delete"
+                              >
+                                <i className="fas fa-trash-alt"></i>
+                              </span> */}
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td>No Subjects Yet..</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>

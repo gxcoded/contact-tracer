@@ -66,3 +66,36 @@
 .class-nav-links:hover {
   border-bottom: 2px solid var(--blue);
 }
+@media (max-width: 1200px) {
+  .class-room-header-left {
+    background: none;
+    width: 30%;
+  }
+
+  .class-room-header-right {
+    width: 70%;
+  }
+}
+@media (max-width: 900px) {
+  .dot-icon {
+    display: none;
+  }
+}
+@media (max-width: 850px) {
+  .class-room-header-left {
+    display: none;
+  }
+
+  .class-room-header-right {
+    width: 100%;
+  }
+  .class-room-header-right-content {
+    width: 100%;
+  }
+  .class-nav {
+    font-size: 0.6rem;
+  }
+  .class-nav-links {
+    padding: 0.1em 0;
+  }
+}

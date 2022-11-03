@@ -164,9 +164,9 @@ const ReportPositive = ({ accountInfo }) => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type Custom Message Here"
-                    className="form-control m-0"
+                    className="form-control positive-text-area m-0"
                     required
-                    minLength={"20"}
+                    // minLength={"20"}
                     rows="10"
                   ></textarea>
                 </div>

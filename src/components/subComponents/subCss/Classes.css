@@ -111,14 +111,16 @@
 /* =========Pop UP=========== */
 .add-class-pop-container {
   position: absolute;
+  max-height: 700px;
   height: 100%;
+  min-width: 400px;
   width: 100%;
   backdrop-filter: blur(1px);
   z-index: 2;
   display: flex;
   justify-content: center;
   transition: 1s ease;
-  margin-top: -80em;
+  margin-top: -200em;
 }
 .add-class-pop-form {
   border-radius: 5px;
@@ -190,4 +192,12 @@
   position: absolute;
   text-align: right;
   top: 0;
+}
+@media (max-width: 500px) {
+  .classes-display {
+    padding: 0 1em;
+  }
+  .classes-display-body {
+    justify-content: center;
+  }
 }

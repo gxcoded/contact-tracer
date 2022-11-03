@@ -57,6 +57,7 @@ const SchoolAdmin = () => {
   const [messages, setMessages] = useState([]);
   const [showMsgs, setShowMsgs] = useState(false);
   const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [currentPerson, setCurrentPerson] = useState({});
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -132,6 +133,16 @@ const SchoolAdmin = () => {
 
   const msgToggler = () => {
     setShowMsgs(!showMsgs);
+  };
+
+  const showMsgProof = (list) => {
+    setCurrentPerson(list);
+    setShowMsgs(true);
+    setContactTrace(false);
+
+    setTimeout(() => {
+      setContactTrace(true);
+    }, 500);
   };
 
   const reset = () => {
@@ -426,6 +437,7 @@ const SchoolAdmin = () => {
                     accountInfo={accountInfo}
                     msgToggler={msgToggler}
                     msgReload={msgReload}
+                    currentPerson={currentPerson}
                   />
                 )}
                 <div className="sudo-right-top sa-right-top">
@@ -458,6 +470,7 @@ const SchoolAdmin = () => {
                     <ContactTracer
                       campus={accountInfo.campus._id}
                       roles={roles}
+                      showMsgProof={showMsgProof}
                     />
                   )}
                   {dashboard && (

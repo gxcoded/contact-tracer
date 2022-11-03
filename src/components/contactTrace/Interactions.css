@@ -132,3 +132,12 @@
   font-size: 0.8rem;
   font-style: italic;
 }
+/* =====PROOF====== */
+
+.show-proof {
+  margin: 1em 0;
+  padding: 1em;
+  background: white;
+  box-shadow: var(--shadowColorLight);
+  border-radius: 10px;
+}

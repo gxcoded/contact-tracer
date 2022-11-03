@@ -209,10 +209,10 @@ const Student = ({ vaxStatsList, genderList }) => {
                 </div>
                 {profile && (
                   <div className="sudo-right-main override ">
-                    <SvgDisplay />
-                    <div className="profile-container p-5">
+                    {/* <SvgDisplay /> */}
+                    <div className="profile-container">
                       <div className="student-main">
-                        <div className="student-profile ">
+                        <div className="student-profile">
                           <div className="student-profile-left">
                             <div className="profile-upper-section">
                               <div className="profile-name">

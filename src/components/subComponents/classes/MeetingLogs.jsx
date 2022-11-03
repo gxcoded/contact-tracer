@@ -30,10 +30,31 @@ const MeetingLogs = ({ room }) => {
     setListView(!listView);
   };
 
+  const dateFormatter = (timeString) => {
+    const date = new Date(Number(timeString)).toString().slice(4, 15);
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${date}`;
+  };
+
+  const timeFormatter = (timeString) => {
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${time}`;
+  };
+
   return (
     <div className="meeting-logs-container">
       {listView ? (
-        <div className="table-list">
+        <div className="table-list meeting-logs-table-list">
           <div className="table-header px-2 d-flex justify-content-between align-items-center">
             <div className="table-header-text fw-bold">Meeting List</div>
             <div>
@@ -55,9 +76,9 @@ const MeetingLogs = ({ room }) => {
           <table className="campus-table table table-striped">
             <thead>
               <tr>
-                <th className="fw-bold" scope="col">
+                {/* <th className="fw-bold" scope="col">
                   Meeting
-                </th>
+                </th> */}
                 <th className="fw-bold" scope="col">
                   Date
                 </th>
@@ -76,16 +97,10 @@ const MeetingLogs = ({ room }) => {
               {meetings.length > 0 &&
                 meetings.map((list) => (
                   <tr key={list._id}>
-                    <td>Class Meeting</td>
-                    <td>
-                      {new Date(Number(list.date)).toString().slice(0, 16)}
-                    </td>
-                    <td>
-                      {new Date(Number(list.start)).toString().slice(16, 25)}
-                    </td>
-                    <td>
-                      {new Date(Number(list.end)).toString().slice(16, 25)}
-                    </td>
+                    {/* <td>Class Meeting</td> */}
+                    <td>{dateFormatter(list.date)}</td>
+                    <td>{timeFormatter(list.start)}</td>
+                    <td>{timeFormatter(list.end)}</td>
                     <td>
                       <div
                         className="view-record-btn"

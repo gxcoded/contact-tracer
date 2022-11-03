@@ -14,13 +14,14 @@
   display: flex;
   align-items: center;
   margin-top: 1em;
+  flex-wrap: wrap;
 }
 .contact-tracer-card {
   height: 200px;
   width: 300px;
   border-radius: 20px;
   box-shadow: var(--shadowColorLight);
-  margin: 0 1em;
+  margin-right: 1em;
   cursor: pointer;
   display: flex;
   justify-content: center;

@@ -46,7 +46,7 @@ const ClassRoom = ({ room, options }) => {
           </div>
         </div>
         <div className="class-room-header-right">
-          <div className="class-room-header-right-content ">
+          <div className="class-room-header-right-content">
             <div className="selected-display">
               {room.subject.courseDescription}
             </div>
@@ -58,7 +58,8 @@ const ClassRoom = ({ room, options }) => {
                 }}
                 className="class-nav-links nav-active"
               >
-                <i className="me-2 fas fa-grip-vertical"></i>Meetings
+                <i className="me-2 fas fa-grip-vertical dot-icon"></i>
+                Meetings
               </div>
               <div
                 onClick={(e) => {
@@ -67,7 +68,7 @@ const ClassRoom = ({ room, options }) => {
                 }}
                 className="class-nav-links"
               >
-                <i className="me-2 fas fa-grip-vertical"></i>Students
+                <i className="me-2 fas fa-grip-vertical dot-icon"></i>Students
               </div>
               <div
                 onClick={(e) => {
@@ -76,10 +77,10 @@ const ClassRoom = ({ room, options }) => {
                 }}
                 className="class-nav-links"
               >
-                <i className="me-2 fas fa-grip-vertical"></i>Attendance
+                <i className="me-2 fas fa-grip-vertical dot-icon"></i>Attendance
               </div>
               <div onClick={() => options()} className="class-nav-links">
-                <i className="me-2 fas fa-undo"></i>
+                <i className="me-2 fas fa-undo dot-icon"></i>
                 Previous Page
               </div>
             </nav>

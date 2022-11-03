@@ -32,10 +32,26 @@
   padding: 0 0.5em;
   font-weight: 600;
 }
+.attendance-log-list {
+  overflow: hidden;
+}
+.meeting-logs-table-section {
+  overflow: auto;
+}
 .attendance-category {
   padding: 1em;
-  background: rgb(255, 252, 252);
+
   font-weight: 500;
   margin-top: 1em;
   font-weight: 500;
+}
+.meeting-logs-table {
+  min-width: 600px;
+  overflow: auto;
+}
+@media (max-width: 600px) {
+  .meeting-details-left {
+    font-size: 0.8rem;
+    width: 100%;
+  }
 }

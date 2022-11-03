@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import AllMsgsThread from "./AllMsgsThread";
 import NewMsgsThread from "./NewMsgsThread";
 
-const Messages = ({ accountInfo, msgToggler, msgReload }) => {
+const Messages = ({ accountInfo, msgToggler, msgReload, currentPerson }) => {
   const [showNew, setShowNew] = useState(true);
   const [showAll, setShowAll] = useState(false);
 
@@ -52,6 +52,7 @@ const Messages = ({ accountInfo, msgToggler, msgReload }) => {
         <div className="msgs-main-thread">
           {showNew && (
             <NewMsgsThread
+              currentPerson={currentPerson}
               campusId={accountInfo.campus._id}
               msgReload={msgReload}
             />

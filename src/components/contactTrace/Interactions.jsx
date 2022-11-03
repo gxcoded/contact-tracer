@@ -25,6 +25,7 @@ const Interactions = ({ current, toggleView }) => {
   useEffect(() => {
     loadData();
     loadDates(days);
+    console.log(current);
   }, []);
 
   const loadData = async () => {
@@ -140,6 +141,9 @@ const Interactions = ({ current, toggleView }) => {
               <i className="me-2 fas fa-chevron-left"></i>
               Go Back
             </span>
+          </div>
+          <div className="show-proof">
+            <div className="show-proof-content"></div>
           </div>
           <div className="interactions-main">
             <div className="interactions-main-left">

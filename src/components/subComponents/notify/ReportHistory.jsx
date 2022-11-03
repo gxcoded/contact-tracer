@@ -77,7 +77,9 @@ const ReportHistory = ({ accountInfo }) => {
                     </div>
                   </div>
                 ) : (
-                  <div>School Admin has no reply yet..</div>
+                  <div className="admin-reply-msg">
+                    School Admin has no reply yet..
+                  </div>
                 )}
               </div>
             </div>

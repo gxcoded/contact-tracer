@@ -32,13 +32,33 @@ const ClassAttendanceLog = ({ currentList, toggleList }) => {
     return data;
   };
 
-  const printRecord = () => {
-    window.open(`${window.location.href}/asdfasdf`);
+  // const printRecord = () => {
+  //   window.open(`${window.location.href}/asdfasdf`);
+  // };
+
+  const dateFormatter = (timeString) => {
+    const date = new Date(Number(timeString)).toString().slice(4, 15);
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${date}`;
   };
 
+  const timeFormatter = (timeString) => {
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${time}`;
+  };
   return (
     <div>
-      <div className="table-list">
+      <div className="table-list attendance-log-list border">
         <div className="meeting-details">
           <div className="meeting-details-left">
             <div className="meeting-details-title">Meeting Details</div>
@@ -46,113 +66,115 @@ const ClassAttendanceLog = ({ currentList, toggleList }) => {
               {new Date(Number(currentList.date)).toString().slice(0, 16)}
             </div>
             <div className="meeting-details-start">
-              {new Date(Number(currentList.start)).toString().slice(16, 25)}
+              {timeFormatter(currentList.start)}
             </div>
           </div>
           <div className="meeting-details-right">
-            <div onClick={() => printRecord()}>
+            {/* <div onClick={() => printRecord()}>
               <i className="fas fa-print"></i>
-            </div>
+            </div> */}
             <div onClick={() => toggleList()}>
               <i className="fas fa-chevron-circle-left"></i>
             </div>
           </div>
         </div>
-        {/* students table */}
-        <div className="attendance-category">Students</div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th className="fw-bold" scope="col">
-                Id Number
-              </th>
-              <th className="fw-bold" scope="col">
-                Name
-              </th>
-              <th className="fw-bold" scope="col">
-                Time In
-              </th>
-              <th className="fw-bold" scope="col">
-                Time Out
-              </th>
-              {/* <th className="fw-bold" scope="col">
+        <div className="meeting-logs-table-section">
+          {/* students table */}
+          <div className="attendance-category">Students</div>
+          <table className="table meeting-logs-table">
+            <thead>
+              <tr>
+                <th className="fw-bold" scope="col">
+                  Id Number
+                </th>
+                <th className="fw-bold" scope="col">
+                  Name
+                </th>
+                <th className="fw-bold" scope="col">
+                  Time In
+                </th>
+                <th className="fw-bold" scope="col">
+                  Time Out
+                </th>
+                {/* <th className="fw-bold" scope="col">
                 Remarks
               </th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {attendanceLog.length > 0 &&
-              attendanceLog.map(
-                (list) =>
-                  !list.isSitIn &&
-                  !list.isVisitor && (
-                    <tr key={list._id}>
-                      <td>{list.accountScanned.username}</td>
-                      <td>
-                        {list.accountScanned.lastName},{" "}
-                        {list.accountScanned.firstName}
-                      </td>
-                      <td>
-                        {new Date(Number(list.start)).toString().slice(16, 25)}
-                      </td>
-                      <td>
-                        {new Date(Number(list.end)).toString().slice(16, 25)}
-                      </td>
-                    </tr>
-                  )
-              )}
-          </tbody>
-        </table>
-        {/* Sit In table */}
-        <div className="attendance-category">Sit In</div>
-        <table className="table">
-          <tbody>
-            {attendanceLog.length > 0 &&
-              attendanceLog.map(
-                (list) =>
-                  list.isSitIn && (
-                    <tr key={list._id}>
-                      <td>{list.accountScanned.username}</td>
-                      <td>
-                        {list.accountScanned.lastName},{" "}
-                        {list.accountScanned.firstName}
-                      </td>
-                      <td>
-                        {new Date(Number(list.start)).toString().slice(16, 25)}
-                      </td>
-                      <td>
-                        {new Date(Number(list.end)).toString().slice(16, 25)}
-                      </td>
-                    </tr>
-                  )
-              )}
-          </tbody>
-        </table>
-        {/* Guest table */}
-        <div className="attendance-category">Guest</div>
-        <table className="table">
-          <tbody>
-            {attendanceLog.length > 0 &&
-              attendanceLog.map(
-                (list) =>
-                  list.isVisitor && (
-                    <tr key={list._id}>
-                      <td>{list.accountScanned.username}</td>
-                      <td>
-                        {list.accountScanned.lastName},{" "}
-                        {list.accountScanned.firstName}
-                      </td>
-                      <td>
-                        {new Date(Number(list.start)).toString().slice(16, 25)}
-                      </td>
-                      <td>
-                        {new Date(Number(list.end)).toString().slice(16, 25)}
-                      </td>
-                    </tr>
-                  )
-              )}
-          </tbody>
-        </table>
+              </tr>
+            </thead>
+            <tbody>
+              {attendanceLog.length > 0 &&
+                attendanceLog.map(
+                  (list) =>
+                    !list.isSitIn &&
+                    !list.isVisitor && (
+                      <tr key={list._id}>
+                        <td>{list.accountScanned.username}</td>
+                        <td>
+                          {list.accountScanned.lastName},{" "}
+                          {list.accountScanned.firstName}
+                        </td>
+                        <td>{timeFormatter(list.start)}</td>
+                        <td>{timeFormatter(list.end)}</td>
+                      </tr>
+                    )
+                )}
+            </tbody>
+          </table>
+          {/* Sit In table */}
+          <div className="attendance-category">Sit In</div>
+          <table className="table meeting-logs-table">
+            <tbody>
+              {attendanceLog.length > 0 &&
+                attendanceLog.map(
+                  (list) =>
+                    list.isSitIn && (
+                      <tr key={list._id}>
+                        <td>{list.accountScanned.username}</td>
+                        <td>
+                          {list.accountScanned.lastName},{" "}
+                          {list.accountScanned.firstName}
+                        </td>
+                        <td>
+                          {new Date(Number(list.start))
+                            .toString()
+                            .slice(16, 25)}
+                        </td>
+                        <td>
+                          {new Date(Number(list.end)).toString().slice(16, 25)}
+                        </td>
+                      </tr>
+                    )
+                )}
+            </tbody>
+          </table>
+          {/* Guest table */}
+          <div className="attendance-category ">Guest</div>
+          <table className="table meeting-logs-table">
+            <tbody>
+              {attendanceLog.length > 0 &&
+                attendanceLog.map(
+                  (list) =>
+                    list.isVisitor && (
+                      <tr key={list._id}>
+                        <td>{list.accountScanned.username}</td>
+                        <td>
+                          {list.accountScanned.lastName},{" "}
+                          {list.accountScanned.firstName}
+                        </td>
+                        <td>
+                          {new Date(Number(list.start))
+                            .toString()
+                            .slice(16, 25)}
+                        </td>
+                        <td>
+                          {new Date(Number(list.end)).toString().slice(16, 25)}
+                        </td>
+                      </tr>
+                    )
+                )}
+            </tbody>
+          </table>
+        </div>
         {/* <div className="show-count p-4 mt-5">
           Showing{" "}
           <span className="text-primary fw-bold">{attendanceLog.length}</span>{" "}

@@ -8,3 +8,10 @@
   border-radius: 5px;
   padding: 0.1em 1em;
 }
+.meeting-logs-container {
+  overflow: auto;
+}
+.meeting-logs-table-list {
+  min-width: 800px;
+  overflow: auto;
+}

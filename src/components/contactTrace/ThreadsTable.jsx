@@ -1,4 +1,4 @@
-const ThreadsTable = ({ data, showInteractions, api, roles }) => {
+const ThreadsTable = ({ data, showInteractions, api, roles, showMsgProof }) => {
   const getRole = (id) => {
     let description = "";
     roles.forEach((role) => {
@@ -66,7 +66,7 @@ const ThreadsTable = ({ data, showInteractions, api, roles }) => {
             {/* <td>{list.accountOwner.address}</td> */}
             <td className="text-center">
               <button
-                onClick={() => showInteractions(list.accountOwner)}
+                onClick={() => showMsgProof(list.accountOwner)}
                 className="btn btn-primary"
               >
                 Details

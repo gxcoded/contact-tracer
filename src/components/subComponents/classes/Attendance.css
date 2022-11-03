@@ -1,5 +1,6 @@
 .attendance-container {
   position: relative;
+  overflow: auto;
 }
 
 .attendance-header,
@@ -7,14 +8,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
+
 .attendance-header-title {
   font-weight: 600;
-  font-size: 1.2em;
 }
 .attendance-records-main {
   font-size: 0.8em;
   display: flex;
+  min-width: 1000px;
+  overflow: auto;
 }
 .attendance-records-main-left {
   width: 20%;

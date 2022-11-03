@@ -279,11 +279,11 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
       )}
 
       <div
-        className={`new-meeting-right border mx-1 
+        className={`new-meeting-right mx-1 
         }`}
       >
         <div className="new-meeting-logs-right-header">Students</div>
-        <table className="campus-table table table-striped">
+        <table className="campus-table table table-striped current-meeting-log-table">
           <tbody>
             {studentLogs.length > 0 ? (
               studentLogs.map((list) => (
@@ -319,7 +319,11 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
               ))
             ) : (
               <tr>
-                <td className="fw-bold fst-italic">No Logs Yet..</td>
+                <tr>
+                  <div className="fw-bold fst-italic new-meeting-no-logs p-4">
+                    No Logs Yet..
+                  </div>
+                </tr>
               </tr>
             )}
           </tbody>
@@ -363,7 +367,11 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
               ))
             ) : (
               <tr>
-                <td className="fw-bold fst-italic">No Logs Yet..</td>
+                <tr>
+                  <div className="fw-bold fst-italic new-meeting-no-logs">
+                    No Logs Yet..
+                  </div>
+                </tr>
               </tr>
             )}
           </tbody>
@@ -407,7 +415,11 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
               ))
             ) : (
               <tr>
-                <td className="fw-bold fst-italic">No Logs Yet..</td>
+                <tr>
+                  <div className="fw-bold fst-italic new-meeting-no-logs">
+                    No Logs Yet..
+                  </div>
+                </tr>
               </tr>
             )}
           </tbody>

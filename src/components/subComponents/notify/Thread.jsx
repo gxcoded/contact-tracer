@@ -2,7 +2,7 @@ import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import swal from "sweetalert";
 
-const Thread = ({ accountId, toggleThread }) => {
+const Thread = ({ accountId, toggleThread, newThread }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [threads, setThreads] = useState([]);
   const [reply, setReply] = useState("");
@@ -124,7 +124,11 @@ const Thread = ({ accountId, toggleThread }) => {
                     </div>
                   </div>
                 )}
-                <button className="btn btn-primary mt-2">Trace Contacts</button>
+                {newThread && (
+                  <button className="btn btn-primary mt-2">
+                    Trace Contacts
+                  </button>
+                )}
               </div>
             </div>
             <div className="single-thread-msgs mt-5">

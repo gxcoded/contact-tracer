@@ -5,7 +5,7 @@ import Table from "../contactTrace/Table";
 import ThreadsTable from "../contactTrace/ThreadsTable";
 import axios from "axios";
 
-const ContactTracer = ({ campus }) => {
+const ContactTracer = ({ campus, showMsgProof }) => {
   const [requested, setRequested] = useState(false);
   const [text, setText] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -250,6 +250,7 @@ const ContactTracer = ({ campus }) => {
             )}
             {showNewThreads && (
               <ThreadsTable
+                showMsgProof={showMsgProof}
                 data={newThreads}
                 showInteractions={showInteractions}
                 api={api}

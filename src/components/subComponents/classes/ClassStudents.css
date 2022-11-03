@@ -15,6 +15,12 @@
   background: var(--red);
   color: white;
 }
+.class-student-header-search {
+  min-width: 400px;
+}
+.class-students-body {
+  overflow: auto;
+}
 /* ============AddNewStudent Component============= */
 .class-student-header-part {
   margin-top: 2em;
@@ -25,4 +31,9 @@
 .class-student-header-title {
   width: 30%;
   font-weight: 600;
+}
+@media (max-width: 700px) {
+  .class-student-header-title {
+    display: none;
+  }
 }

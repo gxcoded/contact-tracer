@@ -1,5 +1,6 @@
 .subjects-container {
   position: relative;
+  overflow: hidden;
 }
 .subjects-title {
   font-size: 1.2em;
@@ -11,21 +12,31 @@
   box-shadow: var(--shadowColor);
   min-height: 500px;
   border-radius: 20px;
+  overflow: hidden;
 }
 .subjects-main-content {
   display: flex;
   width: 100%;
   height: 100%;
 }
+.left-col {
+  width: 40%;
+  display: flex;
+}
 .subject-cols {
-  width: 20%;
+  width: 50%;
   padding: 1em;
   border-radius: 20px;
 }
 .subject-cols-main {
-  width: 40%;
+  width: 60%;
   padding: 1em;
   border-radius: 20px;
+  overflow: auto;
+}
+.subjects-col-table {
+  min-width: 500px;
+  overflow: auto;
 }
 .subject-cols-title {
   font-weight: 500;
@@ -96,4 +107,47 @@
 }
 .pop-show {
   margin-top: 0;
+}
+@media (max-width: 1155px) {
+  .left-col {
+    flex-direction: column;
+  }
+  .subject-cols {
+    width: 70%;
+  }
+}
+@media (max-width: 790px) {
+  .left-col {
+    width: 30%;
+  }
+  .subject-cols {
+    width: 100%;
+  }
+  .subject-cols-main {
+    width: 70%;
+  }
+}
+@media (max-width: 740px) {
+  .subjects-main-content {
+    flex-direction: column;
+  }
+  .left-col {
+    flex-direction: row;
+    width: 100%;
+  }
+  .subject-cols {
+    width: 50%;
+  }
+  .subject-cols-main {
+    width: 100%;
+  }
+}
+
+@media (max-width: 740px) {
+  .subjects-main-content {
+    font-size: 0.7rem;
+  }
+  .subjects-col-table table {
+    font-size: 0.8rem;
+  }
 }

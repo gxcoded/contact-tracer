@@ -608,7 +608,7 @@ const Classes = ({ accountInfo }) => {
                       {currentSem} */}
                     </span>
                   </div>
-                  <div className="classes-display-body">
+                  <div className="classes-display-body ">
                     <div
                       onClick={() => {
                         formReset();

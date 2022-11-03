@@ -2,15 +2,20 @@ import { Fragment, useEffect, useState } from "react";
 import Thread from "./Thread";
 import axios from "axios";
 
-const NewMsgsThread = ({ campusId, msgReload }) => {
+const NewMsgsThread = ({ campusId, msgReload, currentPerson }) => {
   const [singleThread, setSingleThead] = useState(false);
   const [url] = useState(process.env.REACT_APP_URL);
   const [threads, setThreads] = useState([]);
   const [accountId, setAccountId] = useState("");
   const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [newThread] = useState(true);
 
   useEffect(() => {
     dataLoader();
+    Object.keys(currentPerson).length > 0 && setAccountId(currentPerson._id);
+    if (currentPerson) {
+      setSingleThead(true);
+    }
   }, []);
 
   const toggleThread = () => {
@@ -66,6 +71,7 @@ const NewMsgsThread = ({ campusId, msgReload }) => {
           accountId={accountId}
           toggleThread={toggleThread}
           msgReload={msgReload}
+          newThread={newThread}
         />
       ) : (
         <Fragment>

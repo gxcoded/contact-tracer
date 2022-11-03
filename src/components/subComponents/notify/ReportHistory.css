@@ -44,3 +44,12 @@
   font-size: 0.8em;
   margin-top: 1em;
 }
+@media (max-width: 700px) {
+  .sent-message {
+    flex-direction: column;
+  }
+  .sent-message-text,
+  .admin-reply-msg {
+    font-size: 0.8rem;
+  }
+}

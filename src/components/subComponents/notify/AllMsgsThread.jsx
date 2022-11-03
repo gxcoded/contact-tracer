@@ -8,6 +8,7 @@ const AllMsgsThread = ({ campusId, msgReload }) => {
   const [threads, setThreads] = useState([]);
   const [accountId, setAccountId] = useState("");
   const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [newThread] = useState(false);
 
   useEffect(() => {
     dataLoader();
@@ -65,6 +66,7 @@ const AllMsgsThread = ({ campusId, msgReload }) => {
           accountId={accountId}
           toggleThread={toggleThread}
           msgReload={msgReload}
+          newThread={newThread}
         />
       ) : (
         <Fragment>
