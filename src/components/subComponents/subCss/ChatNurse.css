@@ -102,6 +102,9 @@
   font-weight: 500;
   font-size: 0.7rem;
 }
+.on-top-of-key {
+  height: 100%;
+}
 @media (max-width: 1000px) {
   .chat-nurse-main {
     flex-direction: column;

@@ -149,7 +149,6 @@ const TraceAll = ({
                   <Fragment key={Math.random() * 100000}>
                     {checkVisited(d.numeric).map((room) => (
                       <div className="visited-room-details">
-                        {count++}
                         <div className="vrd-header bg-warning">
                           {room.room.description}
                         </div>

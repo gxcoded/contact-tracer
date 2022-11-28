@@ -9,6 +9,7 @@ const ChatNurse = ({ accountInfo }) => {
   const [text, setText] = useState("");
   const [chatThread, setChatThread] = useState([]);
   const bottomTrigger = document.querySelector("#bottomTrigger");
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     loadNurseInfo();
@@ -132,9 +133,11 @@ const ChatNurse = ({ accountInfo }) => {
             )}
             <div id="bottom" style={{ height: "100px" }}></div>
           </div>
-          <div className="chat-input">
+          <div className={`chat-input ${focused && "on-top-of-key"}`}>
             <div className="chat-input-main">
               <input
+                onFocus={(e) => setFocused(true)}
+                onBlur={(e) => setFocused(false)}
                 onKeyUp={(e) => {
                   e.keyCode === 13 && chatSender();
                 }}
