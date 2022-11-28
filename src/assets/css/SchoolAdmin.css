@@ -2,7 +2,9 @@
   font-size: 0.7em !important;
   font-weight: 500;
 }
-
+.school-admin-container {
+  position: relative;
+}
 .collapsible {
   padding: 1em 0;
   display: flex;

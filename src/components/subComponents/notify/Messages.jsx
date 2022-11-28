@@ -3,9 +3,15 @@ import { useState, useEffect } from "react";
 import AllMsgsThread from "./AllMsgsThread";
 import NewMsgsThread from "./NewMsgsThread";
 
-const Messages = ({ accountInfo, msgToggler, msgReload, currentPerson }) => {
-  const [showNew, setShowNew] = useState(true);
-  const [showAll, setShowAll] = useState(false);
+const Messages = ({
+  accountInfo,
+  msgToggler,
+  msgReload,
+  currentPerson,
+  currentState,
+}) => {
+  const [showNew, setShowNew] = useState(currentState);
+  const [showAll, setShowAll] = useState(!currentState);
 
   const reset = () => {
     setShowAll(false);
@@ -57,7 +63,14 @@ const Messages = ({ accountInfo, msgToggler, msgReload, currentPerson }) => {
               msgReload={msgReload}
             />
           )}
-          {showAll && <AllMsgsThread campusId={accountInfo.campus._id} />}
+
+          {showAll && (
+            <AllMsgsThread
+              currentPerson={currentPerson}
+              campusId={accountInfo.campus._id}
+              msgReload={msgReload}
+            />
+          )}
         </div>
       </div>
     </div>

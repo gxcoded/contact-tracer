@@ -1,11 +1,13 @@
 import "./Interactions.css";
 import axios from "axios";
 import ShowInteractions from "./ShowInteractions";
+import TraceAll from "./TraceAll";
 import { useState, useEffect, Fragment } from "react";
 
-const Interactions = ({ current, toggleView }) => {
+const Interactions = ({ current, toggleView, showMsgProof }) => {
   const [api] = useState(process.env.REACT_APP_API_SERVER);
   const [showInteractions, setShowInteractions] = useState(false);
+  const [traceAll, setTraceAll] = useState(false);
   const [contacts, setContacts] = useState([]);
   const [url] = useState(process.env.REACT_APP_URL);
   const [days, setDays] = useState(14);
@@ -13,6 +15,7 @@ const Interactions = ({ current, toggleView }) => {
   const [oneDay] = useState(86400000);
   const [fiveHours] = useState(36000000);
   const [currentDate, setCurrentDate] = useState("");
+  const [proof, setProof] = useState([]);
   const [defaultDate] = useState(
     new Date().toISOString().toString().slice(0, 10)
   );
@@ -25,8 +28,23 @@ const Interactions = ({ current, toggleView }) => {
   useEffect(() => {
     loadData();
     loadDates(days);
-    console.log(current);
+    getValidProof();
   }, []);
+
+  //=======Proof==========
+
+  const fetchProof = async () => {
+    const { data } = await axios.post(`${url}/getValidProof`, {
+      accountOwner: current._id,
+    });
+    return data;
+  };
+
+  const getValidProof = async () => {
+    const proof = await fetchProof();
+    console.log(proof);
+    setProof(proof);
+  };
 
   const loadData = async () => {
     const data = await fetchContacts(
@@ -122,124 +140,198 @@ const Interactions = ({ current, toggleView }) => {
     setShowInteractions(!showInteractions);
   };
 
+  const toggleTrace = () => {
+    setTraceAll(!traceAll);
+  };
+
+  const dateFormatter = (timeString) => {
+    const date = new Date(Number(timeString)).toString().slice(4, 15);
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${date}`;
+  };
   // const customStartDate = (value) => {
   //   alert(Number(new Date(value).getTime()));
   // };
 
   return (
     <div className="interactions-container ">
-      {showInteractions ? (
-        <ShowInteractions
+      {traceAll ? (
+        <TraceAll
+          contacts={contacts}
+          current={current}
+          toggleTrace={toggleTrace}
+          customDate={customDate}
           toggleInteractions={toggleInteractions}
-          currentDate={currentDate}
-          currentAccount={current}
         />
       ) : (
         <Fragment>
-          <div className="interactions-header">
-            <span onClick={() => toggleView()} className="prev-btn">
-              <i className="me-2 fas fa-chevron-left"></i>
-              Go Back
-            </span>
-          </div>
-          <div className="show-proof">
-            <div className="show-proof-content"></div>
-          </div>
-          <div className="interactions-main">
-            <div className="interactions-main-left">
-              <div className="interactions-main-left-card">
-                <div className="current-img-container">
-                  <img
-                    src={`${api}/${current.image}`}
-                    // src={require(`../../../../server/uploads/${current.image}`)}
-                    alt={current._id}
-                    className="interactions-current-img"
-                  />
-                </div>
-                <div className="current-info current-info-name">
-                  {current.firstName} {current.lastName}
-                </div>
-                <div className="current-info current-info-role">
-                  {current.role.description}
-                </div>
-                <div className="current-info current-info-username">
-                  {current.username}
-                </div>
-                <div className="notify-btn mt-3">
-                  <button className="btn btn-custom-red">
-                    <i className="me-2 far fa-envelope"></i>Notify Contacts
-                  </button>
-                </div>
+          {showInteractions ? (
+            <ShowInteractions
+              toggleInteractions={toggleInteractions}
+              currentDate={currentDate}
+              currentAccount={current}
+            />
+          ) : (
+            <Fragment>
+              <div className="interactions-header">
+                <span onClick={() => toggleView()} className="prev-btn">
+                  <i className="me-2 fas fa-chevron-left"></i>
+                  Go Back
+                </span>
               </div>
-            </div>
-            <div className="interactions-main-right">
-              <div className="interactions-main-right-header">
-                <div className="interaction-range">
-                  <span>Showing Rooms Visited in last</span>
-                  <div className="range-control">
-                    <div
-                      onClick={() => {
-                        if (days > 1) {
-                          setDays(days - 1);
-                          updateRange(days - 1);
-                        }
-                      }}
-                      className="decrease"
-                    >
-                      <i className="fas fa-chevron-down"></i>
-                    </div>
-                    <div className="range-display">{days}</div>
-                    <div
-                      onClick={() => {
-                        if (days < 14) {
-                          setDays(days + 1);
-                          updateRange(days + 1);
-                        }
-                      }}
-                      className="increase"
-                    >
-                      <i className="fas fa-chevron-up"></i>
-                    </div>
-                  </div>
-                  <span>Day(s)</span>
-                </div>
-                <div className="interaction-starting-date">
-                  <span>Starting Date</span>
-                  <input
-                    value={customDate}
-                    onChange={(e) => {
-                      {
-                        // customStartDate(e.target.value);
-                        setCustomDate(e.target.value);
-                        updateDates(Number(new Date(e.target.value).getTime()));
-                      }
-                    }}
-                    max={defaultDate}
-                    type="date"
-                    className="form-control"
-                  />
-                </div>
-                <hr />
-              </div>
-              <div className="date-grid">
-                {dates.map((d) => (
+              <div className="show-proof">
+                {proof.length > 0 ? (
                   <div
-                    onClick={() => viewInteractions(d.numeric)}
-                    className="date-box  border"
-                    key={Math.floor(Math.random() * 1000000)}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => showMsgProof(current)}
                   >
-                    <div className="date-content-date"> {d.string}</div>
-                    <div className="date-content-visited">
-                      <div className="visited-total">
-                        {checkVisited(d.numeric)}
+                    <div className="proof-section">
+                      <div className="proof-section-header">Report Details</div>
+                      <div className="proof-section-details">
+                        <div className="proof-section-details-left">
+                          <img
+                            src={`${api}/${proof[0].imgProof}`}
+                            alt="proofImg"
+                            className="ps-img"
+                          />
+                        </div>
+                        <div className="proof-section-details-right">
+                          <div className="proof-section-right-details">
+                            <div className="proof-section-label">Test Type</div>
+                            <div className="proof-section-text">
+                              {proof[0].testType.description}
+                            </div>
+                            <div className="proof-section-label">
+                              Date Tested
+                            </div>
+                            <div className="proof-section-text">
+                              {dateFormatter(proof[0].dateTested)}
+                            </div>
+                            <div className="proof-section-label">
+                              Result Date
+                            </div>
+                            <div className="proof-section-text">
+                              {dateFormatter(proof[0].resultDate)}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="visited-text">Rooms Visited</div>
                     </div>
                   </div>
-                ))}
+                ) : (
+                  <div className="show-proof-content text-success">
+                    This user does not sent any Proof in the last 14 days.
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
+              <div className="interactions-main">
+                <div className="interactions-main-left">
+                  <div className="interactions-main-left-card">
+                    <div className="current-img-container">
+                      <img
+                        src={`${api}/${current.image}`}
+                        // src={require(`../../../../server/uploads/${current.image}`)}
+                        alt={current._id}
+                        className="interactions-current-img"
+                      />
+                    </div>
+                    <div className="current-info current-info-name">
+                      {current.firstName} {current.lastName}
+                    </div>
+                    <div className="current-info current-info-role">
+                      {current.role.description}
+                    </div>
+                    <div className="current-info current-info-username">
+                      {current.username}
+                    </div>
+                    <div className="notify-btn mt-3">
+                      <button
+                        onClick={() => toggleTrace()}
+                        className="btn btn-custom-red"
+                      >
+                        <i className="me-2 far fa-envelope"></i>Trace All
+                        Interactions
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="interactions-main-right">
+                  <div className="interactions-main-right-header">
+                    <div className="interaction-range">
+                      <span>Showing Rooms Visited in last</span>
+                      <div className="range-control">
+                        <div
+                          onClick={() => {
+                            if (days > 1) {
+                              setDays(days - 1);
+                              updateRange(days - 1);
+                            }
+                          }}
+                          className="decrease"
+                        >
+                          <i className="fas fa-chevron-down"></i>
+                        </div>
+                        <div className="range-display">{days}</div>
+                        <div
+                          onClick={() => {
+                            if (days < 14) {
+                              setDays(days + 1);
+                              updateRange(days + 1);
+                            }
+                          }}
+                          className="increase"
+                        >
+                          <i className="fas fa-chevron-up"></i>
+                        </div>
+                      </div>
+                      <span>Day(s)</span>
+                    </div>
+                    <div className="interaction-starting-date">
+                      <span>Starting Date</span>
+                      <input
+                        value={customDate}
+                        onChange={(e) => {
+                          {
+                            // customStartDate(e.target.value);
+                            setCustomDate(e.target.value);
+                            updateDates(
+                              Number(new Date(e.target.value).getTime())
+                            );
+                          }
+                        }}
+                        max={defaultDate}
+                        type="date"
+                        className="form-control"
+                      />
+                    </div>
+                    <hr />
+                  </div>
+                  <div className="date-grid">
+                    {dates.map((d) => (
+                      <div
+                        onClick={() => viewInteractions(d.numeric)}
+                        className="date-box  border"
+                        key={Math.floor(Math.random() * 1000000)}
+                      >
+                        <div className="date-content-date"> {d.string}</div>
+                        <div className="date-content-visited">
+                          <div className="visited-total">
+                            {checkVisited(d.numeric)}
+                          </div>
+                          <div className="visited-text">Visits</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Fragment>
+          )}
         </Fragment>
       )}
     </div>

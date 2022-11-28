@@ -112,7 +112,11 @@ const ContactTracer = ({ campus, showMsgProof }) => {
   return (
     <div className="tracer-container">
       {viewContacts ? (
-        <Interactions current={current} toggleView={toggleView} />
+        <Interactions
+          showMsgProof={showMsgProof}
+          current={current}
+          toggleView={toggleView}
+        />
       ) : (
         <Fragment>
           <div className="contact-tracer-summary">
@@ -129,7 +133,21 @@ const ContactTracer = ({ campus, showMsgProof }) => {
                   {newThreads.length}
                 </div>
                 <div className="contact-tracer-card-label">
-                  New Reported Cases
+                  New Reported Positive
+                </div>
+              </div>
+              <div
+                onClick={() => {
+                  resetBoard();
+                  setShowNewThreads(true);
+                }}
+                className="contact-tracer-card"
+              >
+                <div className="contact-tracer-card-counter">
+                  {newThreads.length}
+                </div>
+                <div className="contact-tracer-card-label">
+                  New Reported Negative
                 </div>
               </div>
               <div
@@ -146,7 +164,7 @@ const ContactTracer = ({ campus, showMsgProof }) => {
                   All Reported Cases
                 </div>
               </div>
-              <div className="contact-tracer-search border">
+              {/* <div className="contact-tracer-search border">
                 <form onSubmit={submitSearch}>
                   <div className="tracer-form-title">Search For Accounts</div>
                   <div className="mt-3">
@@ -165,14 +183,8 @@ const ContactTracer = ({ campus, showMsgProof }) => {
                       Search
                     </button>
                   </div>
-                  {/* <div className="contact-tracer-words bg-light">
-                  <span>
-                    Trace someone's interaction by typing the Full Name of the
-                    person you want to trace.
-                  </span>
-                </div> */}
                 </form>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* <div className="contact-tracer-main">
@@ -227,6 +239,7 @@ const ContactTracer = ({ campus, showMsgProof }) => {
               <Fragment>
                 {searchResult.length > 0 ? (
                   <Table
+                    showMsgProof={showMsgProof}
                     data={searchResult}
                     showInteractions={showInteractions}
                     api={api}

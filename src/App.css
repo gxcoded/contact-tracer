@@ -139,6 +139,10 @@ a {
   font-size: 0.7em !important;
   margin: 0.5em;
 }
+.side-button span {
+  background: none !important;
+  color: inherit;
+}
 @media (max-width: 1400px) {
   *::-webkit-scrollbar {
     display: unset;

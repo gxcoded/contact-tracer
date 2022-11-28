@@ -83,7 +83,6 @@
   transition: 1s ease;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .hide-settings-modal {

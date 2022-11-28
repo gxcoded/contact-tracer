@@ -39,6 +39,7 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
 
   const checkExisting = (id) => {
     let exists = false;
+
     pending.forEach((p) => {
       p.accountScanned._id === id && (exists = true);
     });
@@ -55,6 +56,21 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
     const { data } = await axios.post(`${url}/fetchEntranceLogs`, {
       campus: accountInfo.campus._id,
       entrance: assignedRoom.room._id,
+    });
+
+    return data;
+  };
+
+  const pendingLogs = async () => {
+    const logs = await fetchPendingLogs();
+    setPending(logs);
+    console.log(logs);
+  };
+
+  const fetchPendingLogs = async () => {
+    const { data } = await axios.post(`${url}/fetchEntranceLogs`, {
+      campus: accountInfo.campus._id,
+      entrance: room,
     });
 
     return data;
@@ -146,6 +162,7 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
     setShowOptions(false);
     setManual(false);
   };
+
   const setSelected = () => {
     setRoom(searchResult[0]._id);
     setSelectedRoom(searchResult[0]);
@@ -176,20 +193,24 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
   const addLog = async () => {
     const saveLog = async () => {
       console.log(details);
-      const response = await axios.post(`${url}/addLog`, {
+      const { data } = await axios.post(`${url}/addLog`, {
         campus: accountInfo.campus._id,
         room,
         scannedBy: accountInfo._id,
         person: details._id,
       });
-      return await response.data;
+      return data;
     };
 
     const data = await saveLog();
     setReLoad(!reLoad);
-    console.log(data);
+    console.log("this" + data);
     // swal("Done!", "Thank You.", "success");
-    entranceLogs();
+    if (Object.keys(assignedRoom).length > 0) {
+      entranceLogs();
+    } else {
+      pendingLogs();
+    }
     setHideResult(true);
   };
 
@@ -198,13 +219,25 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
     if (confirmed) {
       // swal("Done!", "Thank You.", "success");
       setHideResult(true);
-      entranceLogs();
+      if (Object.keys(assignedRoom).length > 0) {
+        entranceLogs();
+      } else {
+        pendingLogs();
+      }
+      setReLoad(!reLoad);
     }
   };
+
   const out = async (id) => {
+    let r = "";
+    if (Object.keys(assignedRoom).length > 0) {
+      r = assignedRoom.room._id;
+    } else {
+      r = room;
+    }
     const { data } = await axios.post(`${url}/exitLog`, {
       account: id,
-      room: assignedRoom.room._id,
+      room: r,
     });
     console.log(data);
     return data;
@@ -245,20 +278,25 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
                 >
                   Cancel<i className="ms-1 fas fa-ban"></i>
                 </button>
-                {checkExisting(details._id) ? (
-                  <button
-                    onClick={() => confirmOut(details._id)}
-                    className="shadow btn-sm btn-primary"
-                  >
-                    Confirm Out<i className="ms-1 far fa-thumbs-up"></i>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => addLog()}
-                    className="shadow btn-sm btn-primary"
-                  >
-                    Confirm In<i className="ms-1 far fa-thumbs-up"></i>
-                  </button>
+
+                {details.allowed && (
+                  <Fragment>
+                    {checkExisting(details._id) ? (
+                      <button
+                        onClick={() => confirmOut(details._id)}
+                        className="shadow btn-sm btn-primary"
+                      >
+                        Confirm Out<i className="ms-1 far fa-thumbs-up"></i>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => addLog()}
+                        className="shadow btn-sm btn-primary"
+                      >
+                        Confirm In<i className="ms-1 far fa-thumbs-up"></i>
+                      </button>
+                    )}
+                  </Fragment>
                 )}
               </div>
             </div>
@@ -436,7 +474,14 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
           )}
         </div>
       </div>
-      <Logs accountInfo={accountInfo} url={url} reLoad={reLoad} />
+      <Logs
+        accountInfo={accountInfo}
+        url={url}
+        reLoad={reLoad}
+        entranceLogs={entranceLogs}
+        assignedRoom={assignedRoom}
+        pendingLogs={pendingLogs}
+      />
       {/* {Object.keys(assignedRoom).length > 0 &&
       assignedRoom.room.description !== "Entrance" && (
      

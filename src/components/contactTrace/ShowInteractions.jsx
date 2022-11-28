@@ -11,7 +11,6 @@ const ShowInteractions = ({
   const [logs, setLogs] = useState([]);
   const [allLogs, setAllLogs] = useState([]);
   const [results, setResults] = useState([]);
-
   const [api] = useState(process.env.REACT_APP_API_SERVER);
 
   useEffect(() => {
@@ -47,24 +46,36 @@ const ShowInteractions = ({
       campus: currentAccount.campus,
       currentDate,
     });
-
+    console.log(data);
     return data;
   };
 
   const searchContacts = (list) => {
     let array = [];
     console.log(list);
+
     allLogs.forEach((record) => {
       if (list.room._id === record.room._id) {
         if (
-          Number(list.start) <= Number(record.start) &&
+          // Number(list.start) <= Number(record.start) &&
           Number(list.end) >= Number(record.start)
         ) {
           array.push(record);
         }
+        // array.push(record);
       }
     });
     return array;
+  };
+
+  const timeFormatter = (timeString) => {
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${time}`;
   };
 
   return (
@@ -119,10 +130,10 @@ const ShowInteractions = ({
                     </div>
                     <div className="duration-data">
                       <div className="duration-data-display">
-                        {new Date(Number(list.start)).toString().slice(16, 25)}
+                        {timeFormatter(list.start)}
                       </div>
                       <div className="duration-data-display">
-                        {new Date(Number(list.end)).toString().slice(16, 25)}
+                        {timeFormatter(list.end)}
                       </div>
                       <div className="duration-data-display">
                         {list.scannedBy.firstName} {list.scannedBy.lastName}

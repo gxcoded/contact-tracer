@@ -124,11 +124,11 @@ const Thread = ({ accountId, toggleThread, newThread }) => {
                     </div>
                   </div>
                 )}
-                {newThread && (
+                {/* {newThread && (
                   <button className="btn btn-primary mt-2">
                     Trace Contacts
                   </button>
-                )}
+                )} */}
               </div>
             </div>
             <div className="single-thread-msgs mt-5">

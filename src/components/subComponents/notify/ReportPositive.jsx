@@ -9,10 +9,15 @@ const ReportPositive = ({ accountInfo }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [file, setFile] = useState("");
   const [adminInfo, setAdminInfo] = useState({});
+  const [testTypes, setTestTypes] = useState([]);
+
+  const [selectedType, setSelectedType] = useState("");
+  const [minimumDate, setMinimumDate] = useState("");
   const [dateTested, setDateTested] = useState(
     new Date().toISOString().toString().slice(0, 10)
   );
-  const [lastVisited, setLastVisited] = useState(
+
+  const [resultDate, setResultDate] = useState(
     new Date().toISOString().toString().slice(0, 10)
   );
 
@@ -23,7 +28,21 @@ const ReportPositive = ({ accountInfo }) => {
 
   useEffect(() => {
     loadAdminInfo();
+    loadTestTypes();
   }, []);
+
+  //load test types
+  const loadTestTypes = async () => {
+    const types = await fetchTestTypes();
+    console.log(types);
+
+    setTestTypes(types);
+  };
+
+  const fetchTestTypes = async () => {
+    const { data } = await axios.post(`${url}/getTestTypes`);
+    return data;
+  };
 
   const loadAdminInfo = async () => {
     const info = await fetchAdminInfo();
@@ -47,6 +66,7 @@ const ReportPositive = ({ accountInfo }) => {
     reader.onload = () => {
       preview.src = reader.result;
     };
+
     setFile(e.target.files[0]);
     reader.readAsDataURL(e.target.files[0]);
   };
@@ -57,43 +77,48 @@ const ReportPositive = ({ accountInfo }) => {
   };
 
   const sendNow = async () => {
-    if (file) {
-      if (message) {
-        const formData = new FormData();
+    if (selectedType) {
+      if (file) {
+        if (message) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("campus", accountInfo.campus._id);
+          formData.append("accountOwner", accountInfo._id);
+          formData.append("testType", selectedType);
+          formData.append("dateTested", new Date(dateTested).getTime());
+          formData.append("resultDate", new Date(resultDate).getTime());
+          formData.append("dateSent", Date.now().toString());
+          formData.append("message", message);
+          formData.append("adminNumber", adminInfo.phoneNumber);
+          formData.append("adminEmail", adminInfo.email);
 
-        formData.append("file", file);
-        formData.append("campus", accountInfo.campus._id);
-        formData.append("accountOwner", accountInfo._id);
-        formData.append("dateTested", new Date(dateTested).getTime());
-        formData.append("lastVisit", new Date(lastVisited).getTime());
-        formData.append("dateSent", Date.now().toString());
-        formData.append("message", message);
-        formData.append("adminNumber", adminInfo.phoneNumber);
-        formData.append("adminEmail", adminInfo.email);
+          try {
+            const res = await axios.post(`${url}/reportPositive`, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
 
-        try {
-          const res = await axios.post(`${url}/reportPositive`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
+            swal({
+              title: "Sent!",
+              text: "Notification was sent to School Admin",
+              icon: "success",
+            });
 
-          swal({
-            title: "Sent!",
-            text: "Notification was sent to School Admin",
-            icon: "success",
-          });
-          setMessage("");
-          setFile("");
-          document.querySelector("#preview").src = DefaultImage;
-        } catch (error) {
-          console.log(error);
+            setMessage("");
+            setFile("");
+            document.querySelector("#preview").src = DefaultImage;
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          swal("Please Type a Message!");
         }
       } else {
-        swal("Please Type a Message!");
+        swal("Please Include an Image of your test Result!");
       }
     } else {
-      swal("Please Include an Image of your test Result!");
+      swal("Please Select Test Type");
     }
   };
 
@@ -111,13 +136,34 @@ const ReportPositive = ({ accountInfo }) => {
         <div className="rp-right-header">Please Provide Some Details.</div>
         <div className="rp-right-main">
           <div className="rp-right-main-input">
-            <div className="">
-              <span>Date Tested Positive</span>
+            <div className="mt-3">
+              <span>Test Type</span>
+              <select
+                required
+                onChange={(e) => {
+                  setSelectedType(e.target.value);
+                }}
+                className="form-control"
+                defaultValue={selectedType}
+              >
+                <option value={selectedType} disabled>
+                  Select
+                </option>
+                {testTypes.map((list) => (
+                  <option key={list._id} value={list._id}>
+                    {list.description}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mt-2">
+              <span>Date Tested</span>
               <input
                 value={dateTested}
                 onChange={(e) => {
                   {
                     setDateTested(e.target.value);
+                    setMinimumDate(e.target.value);
                   }
                 }}
                 max={defaultDate}
@@ -126,14 +172,15 @@ const ReportPositive = ({ accountInfo }) => {
               />
             </div>
             <div className="mt-2">
-              <span>When was the last time you went to Campus?</span>
+              <span>Date when you get the test Result</span>
               <input
-                value={lastVisited}
+                value={resultDate}
                 onChange={(e) => {
                   {
-                    setLastVisited(e.target.value);
+                    setResultDate(e.target.value);
                   }
                 }}
+                min={minimumDate}
                 max={defaultDate}
                 type="date"
                 className="form-control"

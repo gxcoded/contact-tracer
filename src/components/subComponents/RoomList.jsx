@@ -1,11 +1,14 @@
 import "./subCss/StaffList.css";
+import "./subCss/RoomList.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import swal from "sweetalert";
 import { QRCode } from "react-qrcode-logo";
 import Image from "../../assets/images/psuLogo.png";
+import MapContainer from "../map/MapContainer";
 
 const RoomList = ({ campus }) => {
+  const [isEdit, setIsEdit] = useState(false);
   const [url] = useState(process.env.REACT_APP_URL);
   const [rooms, setRooms] = useState([]);
   const [value, setValue] = useState("");
@@ -14,16 +17,26 @@ const RoomList = ({ campus }) => {
   const [editDescription, setEditDescription] = useState("");
   const [selected, setSelected] = useState({});
   const [current, setCurrent] = useState({});
+  const [floor, setFloor] = useState("");
+  const [currentFloor, setCurrentFloor] = useState("");
+  const [currentLat, setCurrentLat] = useState(0);
+  const [currentLng, setCurrentLng] = useState(0);
+  const [defaultLat, setDefaultLat] = useState(0);
+  const [defaultLng, setDefaultLng] = useState(0);
 
-  //   const [buildings, setBuildings] = useState([]);
-  // const [chosenBuilding, setChosenBuilding] = useState("");
+  const [floors] = useState([
+    { description: "Ground Floor" },
+    { description: "2nd Floor" },
+    { description: "3rd Floor" },
+    { description: "4th Floor" },
+  ]);
+
   const [description, setDescription] = useState("");
   const [filterList, setFilterList] = useState([]);
+  const [showMap, setShowMap] = useState(false);
 
   const loadData = async () => {
     const data = await fetchList();
-    // const fetchedBuildings = await fetchBuildings();
-    // setBuildings(fetchedBuildings);
     setRooms(data);
     setFilterList(data);
   };
@@ -31,7 +44,20 @@ const RoomList = ({ campus }) => {
   useEffect(() => {
     console.log(campus);
     loadData();
+    loadDefaultCoords();
   }, []);
+  const fetchDefaultCoords = async () => {
+    const { data } = await axios.post(`${url}/getCoordinates`, {
+      campusId: campus,
+    });
+    return data;
+  };
+
+  const loadDefaultCoords = async () => {
+    const defaultCoords = await fetchDefaultCoords();
+    setDefaultLat(Number(defaultCoords.lat));
+    setDefaultLng(Number(defaultCoords.lng));
+  };
 
   const fetchList = async () => {
     const response = await axios.post(`${url}/roomList`, {
@@ -39,16 +65,6 @@ const RoomList = ({ campus }) => {
     });
     return await response.data;
   };
-
-  //   const fetchBuildings = async () => {
-  //     const response = await axios.post(
-  //       `"http://localhost:5000/ct-api/buildingList"`,
-  //       {
-  //         campus,
-  //       }
-  //     );
-  //     return await response.data;
-  //   };
 
   const deleteRoom = (id) => {
     swal({
@@ -68,21 +84,8 @@ const RoomList = ({ campus }) => {
 
   const addRoom = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(`${url}/addRoom`, {
-        campus,
-        //   building: chosenBuilding,
-        description,
-      });
-      const data = await response.data;
-      swal("Added!", {
-        icon: "success",
-      });
-      loadData();
-    } catch (error) {
-      console.log(error);
-    }
+    setIsEdit(false);
+    mapToggler();
   };
 
   const downloadRoomQr = async (list) => {
@@ -146,23 +149,31 @@ const RoomList = ({ campus }) => {
 
   const saveEdit = async (e) => {
     e.preventDefault();
-
-    const sendRequest = await axios.post(`${url}/updateRoomDescription`, {
-      id: current._id,
-      description: editDescription,
-    });
-    if (await sendRequest.data) {
-      swal("Updated!", {
-        icon: "success",
-      });
-      setEditModal(false);
-      setEditDescription("");
-      loadData();
-    }
+    setIsEdit(true);
+    setEditModal(false);
+    mapToggler();
   };
 
+  const mapToggler = () => {
+    setShowMap(!showMap);
+  };
   return (
-    <div className="staff-list-container ">
+    <div className="staff-list-container locations-list-container ">
+      {showMap && (
+        <MapContainer
+          floor={floor}
+          description={description}
+          campus={campus}
+          mapToggler={mapToggler}
+          loadData={loadData}
+          isEdit={isEdit}
+          currentFloor={currentFloor}
+          editDescription={editDescription}
+          currentCoords={{ lat: currentLat, lng: currentLng }}
+          current={current}
+          defaultCoordinates={{ lat: defaultLat, lng: defaultLng }}
+        />
+      )}
       <div className="staff-list-title">
         <i className="fas fa-city me-3"></i>Manage Locations
       </div>
@@ -177,23 +188,31 @@ const RoomList = ({ campus }) => {
               <i className="me-2 fas fa-plus"></i>Add Locations
             </div>
             <form onSubmit={addRoom}>
-              <div className="form-inline ">
-                {/* <div className="form-group">
-                  <label>Building</label>
+              <div className="form-inline d-flex">
+                <div className="form-group">
+                  <label>Floor</label>
                   <select
-                    onChange={(e) => setChosenBuilding(e.target.value)}
+                    onChange={(e) => {
+                      setFloor(e.target.value);
+                      console.log(floor);
+                    }}
                     required
-                    defaultValue={chosenBuilding}
+                    defaultValue={""}
                     className="form-control"
                   >
-                    <option value={chosenBuilding}>Select</option>
-                    {buildings.map((list) => (
-                      <option key={list._id} value={list._id}>
+                    <option disabled value={""}>
+                      Select
+                    </option>
+                    {floors.map((list) => (
+                      <option
+                        key={Math.random() * 9999}
+                        value={list.description}
+                      >
                         {list.description}
                       </option>
                     ))}
                   </select>
-                </div> */}
+                </div>
                 <div className="form-input">
                   <div className="form-group">
                     <label>Description</label>
@@ -210,7 +229,7 @@ const RoomList = ({ campus }) => {
               </div>
               <div className="px-2 mt-4 text-end">
                 <button type="submit" className="btn btn-primary">
-                  <i className="me-2 fas fa-save"></i>Save
+                  <i className="fas fa-angle-double-right me-2"></i>Next
                 </button>
               </div>
             </form>
@@ -266,7 +285,7 @@ const RoomList = ({ campus }) => {
             </div>
           )}
           {editModal && (
-            <div className={`settings-modal`}>
+            <div className={`settings-modal `}>
               <div className="edit-modal-main">
                 <div
                   onClick={() => setEditModal(false)}
@@ -275,6 +294,28 @@ const RoomList = ({ campus }) => {
                   <i className="fas fa-times"></i>
                 </div>
                 <form onSubmit={saveEdit}>
+                  <div className="form-group my-3 ">
+                    <select
+                      defaultValue={currentFloor}
+                      onChange={(e) => {
+                        setCurrentFloor(e.target.value);
+                      }}
+                      required
+                      className="form-control"
+                    >
+                      <option disabled value={""}>
+                        Select
+                      </option>
+                      {floors.map((list) => (
+                        <option
+                          key={Math.random() * 9999}
+                          value={list.description}
+                        >
+                          {list.description}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <div className="form-group">
                     <input
                       required
@@ -293,7 +334,7 @@ const RoomList = ({ campus }) => {
                     >
                       Cancel
                     </div>
-                    <button className="btn btn-success mx-1">Save</button>
+                    <button className="btn btn-success mx-1">Next</button>
                   </div>
                 </form>
               </div>
@@ -386,6 +427,9 @@ const RoomList = ({ campus }) => {
                           onClick={() => {
                             setCurrent(list);
                             setEditDescription(list.description);
+                            setCurrentFloor(list.floor);
+                            setCurrentLat(Number(list.lat));
+                            setCurrentLng(Number(list.lng));
                             setEditModal(true);
                           }}
                           className="option-edit text-warning me-3"

@@ -30,7 +30,7 @@ const Positive = ({ accountInfo }) => {
             }}
             className="pos-link pos-link-active"
           >
-            <i className="fas fa-bell me-2"></i>Notify School
+            <i className="fas fa-bell me-2"></i>I'm COVID Positive
           </div>
           <div
             onClick={(e) => {
@@ -39,7 +39,7 @@ const Positive = ({ accountInfo }) => {
             }}
             className="pos-link"
           >
-            <i className="far fa-paper-plane me-2"></i>Sent Messages
+            <i className="far fa-paper-plane me-2"></i>History
           </div>
         </div>
         <hr />

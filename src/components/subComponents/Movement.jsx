@@ -94,7 +94,19 @@ const Movement = ({ accountInfo }) => {
         console.log(array);
       }
     });
+
     setRoomLogs(array);
+  };
+
+  const dateFormatter = (timeString) => {
+    // const date = new Date(Number(timeString)).toString().slice(4, 15);
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${time}`;
   };
 
   return (
@@ -125,19 +137,13 @@ const Movement = ({ accountInfo }) => {
                     roomLogs.map((rl) => (
                       <tr key={rl._id}>
                         <td>{rl.room.description}</td>
-                        <td>
-                          {" "}
-                          {new Date(Number(rl.start)).toString().slice(16, 25)}
-                        </td>
-                        <td>
-                          {" "}
-                          {new Date(Number(rl.end)).toString().slice(16, 25)}
-                        </td>
+                        <td> {dateFormatter(rl.start)}</td>
+                        <td> {dateFormatter(rl.end)}</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td>No Rooms Visited</td>
+                      <td>No Recorded Visit</td>
                     </tr>
                   )}
                 </tbody>
@@ -190,7 +196,7 @@ const Movement = ({ accountInfo }) => {
                 <div className="date-content-date"> {d.string}</div>
                 <div className="date-content-visited">
                   <div className="visited-total">{checkVisited(d.numeric)}</div>
-                  <div className="visited-text">Rooms Visited</div>
+                  <div className="visited-text">Visits</div>
                 </div>
               </div>
             ))}

@@ -3,7 +3,14 @@ import axios from "axios";
 import "./subCss/Logs.css";
 import swal from "sweetalert";
 
-const Logs = ({ accountInfo, url, reLoad }) => {
+const Logs = ({
+  accountInfo,
+  url,
+  reLoad,
+  entranceLogs,
+  assignedRoom,
+  pendingLogs,
+}) => {
   const [logList, setLogList] = useState([]);
   const [api] = useState(process.env.REACT_APP_API_SERVER);
 
@@ -14,6 +21,11 @@ const Logs = ({ accountInfo, url, reLoad }) => {
   const logs = async () => {
     const fetchedLogs = await fetchLogs();
     setLogList(fetchedLogs);
+    if (Object.keys(assignedRoom).length > 0) {
+      entranceLogs();
+    } else {
+      pendingLogs();
+    }
   };
 
   const fetchLogs = async () => {

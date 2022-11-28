@@ -39,10 +39,10 @@ const SchoolAdmin = () => {
   const [attendanceScan, setAttendanceScan] = useState(false);
   const [guestScan, setGuestScan] = useState(false);
   const [subjects, setSubjects] = useState(false);
-  const [adminControl, setAdminControl] = useState(false);
+  const [adminControl, setAdminControl] = useState(true);
   const [staffControl, setStaffControl] = useState(false);
-  const [contactTrace, setContactTrace] = useState(true);
-  const [dashboard, setDashboard] = useState(false);
+  const [contactTrace, setContactTrace] = useState(false);
+  const [dashboard, setDashboard] = useState(true);
   const [staff, setStaff] = useState(false);
   const [students, setStudents] = useState(false);
   const [courses, setCourses] = useState(false);
@@ -58,6 +58,8 @@ const SchoolAdmin = () => {
   const [showMsgs, setShowMsgs] = useState(false);
   const [api] = useState(process.env.REACT_APP_API_SERVER);
   const [currentPerson, setCurrentPerson] = useState({});
+  const [currentState, setCurrentState] = useState(true);
+  const [showMap, setShowMap] = useState(true);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -71,9 +73,9 @@ const SchoolAdmin = () => {
       setCourseList(fetchedCourses);
       setRoles(fetchedRoles);
 
-      setInterval(() => {
-        msgReload(info.campus._id);
-      }, 1000);
+      // setInterval(() => {
+      //   msgReload(info.campus._id);
+      // }, 1000);
     };
 
     fetchInfo();
@@ -131,18 +133,22 @@ const SchoolAdmin = () => {
     e.target.classList.add("activ");
   };
 
-  const msgToggler = () => {
+  const msgToggler = (state) => {
+    setCurrentState(state);
     setShowMsgs(!showMsgs);
   };
 
   const showMsgProof = (list) => {
     setCurrentPerson(list);
     setShowMsgs(true);
-    setContactTrace(false);
+    // setContactTrace(false);
 
-    setTimeout(() => {
-      setContactTrace(true);
-    }, 500);
+    // setTimeout(() => {
+    //   setContactTrace(true);
+    // }, 500);
+  };
+  const mapToggler = () => {
+    setShowMap(!showMap);
   };
 
   const reset = () => {
@@ -171,7 +177,8 @@ const SchoolAdmin = () => {
     document.querySelector("#navLeft").classList.toggle("shown");
   };
   return (
-    <div className="sudo-container">
+    <div className="sudo-container school-admin-container">
+      {/* {showMap && <MapContainer mapToggler={mapToggler} />} */}
       {loading ? (
         <div className="spinner border loader-effect">
           <BounceLoader color="#5dcea1" loading={loading} size={150} />
@@ -208,8 +215,8 @@ const SchoolAdmin = () => {
                     </div>
                   </div>
                 </div>
-                <hr className="mt-3" />
-                <div className="links">
+                {/* <hr className="mt-3" /> */}
+                {/* <div className="links">
                   <ul className="list-group list-group-light">
                     <li className="list-group-item px-4 border-0">
                       <div
@@ -231,7 +238,7 @@ const SchoolAdmin = () => {
                       </div>
                     </li>
                   </ul>
-                </div>
+                </div> */}
                 <div className="links">
                   <hr />
                   <div
@@ -251,13 +258,13 @@ const SchoolAdmin = () => {
                   </div>
                   {adminControl && (
                     <ul className="list-group list-group-light">
-                      <li className="list-group-item px-4 border-0">
+                      <li className="list-group-item px-4 border-0 ">
                         <div
                           onClick={(e) => {
                             toggleActive(e);
                             setDashboard(true);
                           }}
-                          className="side-button "
+                          className="side-button activ"
                         >
                           <i className="fas fa-table me-3"></i>Dashboard
                         </div>
@@ -438,6 +445,7 @@ const SchoolAdmin = () => {
                     msgToggler={msgToggler}
                     msgReload={msgReload}
                     currentPerson={currentPerson}
+                    currentState={currentState}
                   />
                 )}
                 <div className="sudo-right-top sa-right-top">
@@ -445,7 +453,7 @@ const SchoolAdmin = () => {
                     <i className="fas fa-qrcode me-3 "></i>
                     <span>PSU-Trace</span>
                   </div> */}
-                  <div
+                  {/* <div
                     onClick={() => msgToggler()}
                     className={`notification-link d-flex align-items-center ${
                       messages.length > 0 && "bold-notif"
@@ -458,7 +466,7 @@ const SchoolAdmin = () => {
                         {messages.length}
                       </span>
                     )}
-                  </div>
+                  </div> */}
                   <div className="burger-menu  d-flex justify-content-end align-items-center">
                     <div onClick={toggleLeftBar} className="burger-bars p-3">
                       <i className="fas fa-bars"></i>
@@ -466,13 +474,13 @@ const SchoolAdmin = () => {
                   </div>
                 </div>
                 <div className="sudo-right-main">
-                  {contactTrace && (
+                  {/* {contactTrace && (
                     <ContactTracer
                       campus={accountInfo.campus._id}
                       roles={roles}
                       showMsgProof={showMsgProof}
                     />
-                  )}
+                  )} */}
                   {dashboard && (
                     <SchoolAdminDashboard accountInfo={accountInfo} />
                   )}
@@ -497,7 +505,12 @@ const SchoolAdmin = () => {
                   {guestScan && <StaffGuestScan />}
                   {courses && <CourseList accountInfo={accountInfo} />}
                   {building && <BuildingList campus={accountInfo.campus._id} />}
-                  {rooms && <RoomList campus={accountInfo.campus._id} />}
+                  {rooms && (
+                    <RoomList
+                      mapToggler={mapToggler}
+                      campus={accountInfo.campus._id}
+                    />
+                  )}
                   {credentials && <CredentialsPage accountInfo={accountInfo} />}
                   {attendanceRecord && <StaffAttendanceRecord />}
                   {notification && (

@@ -38,6 +38,7 @@ const Teaching = () => {
   const [assignedRoom] = useState({});
   const [scan, setScan] = useState(false);
   const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -46,6 +47,7 @@ const Teaching = () => {
       const info = await getInfo();
       setIsChair(Object.keys(await chairChecker()).length > 0);
       setAccountInfo(info);
+      isAllowed(info._id);
     };
 
     fetchInfo();
@@ -57,6 +59,21 @@ const Teaching = () => {
   const reloadPage = () => {
     setUpdated(!updated);
   };
+
+  //status checker
+  const isAllowed = async (id) => {
+    const response = await requestChecker(id);
+    setGuestScan(response);
+    setAllowed(response);
+  };
+
+  const requestChecker = async (id) => {
+    const { data } = await axios.post(`${url}/statusChecker`, {
+      id,
+    });
+    return data;
+  };
+
   //get account Information
   const getInfo = async () => {
     const id = localStorage.getItem("ctIdToken");
@@ -138,29 +155,33 @@ const Teaching = () => {
                 <hr className="mt-3" />
                 <div className="links">
                   <ul className="list-group list-group-light">
-                    <li className="list-group-item px-4 border-0">
-                      <div
-                        onClick={(e) => {
-                          resetState(e);
-                          setGuestScan(true);
-                        }}
-                        className="side-button activ"
-                      >
-                        <i className="fas fa-qrcode me-3"></i>Scanner
-                      </div>
-                    </li>
-                    <li className="list-group-item px-4 border-0">
-                      <div
-                        onClick={(e) => {
-                          resetState(e);
-                          setScan(true);
-                        }}
-                        className="side-button"
-                      >
-                        <i className="fas fa-vector-square me-3"></i>Room
-                        Scanner
-                      </div>
-                    </li>
+                    {allowed && (
+                      <Fragment>
+                        <li className="list-group-item px-4 border-0">
+                          <div
+                            onClick={(e) => {
+                              resetState(e);
+                              setGuestScan(true);
+                            }}
+                            className="side-button activ"
+                          >
+                            <i className="fas fa-qrcode me-3"></i>Scanner
+                          </div>
+                        </li>
+                        <li className="list-group-item px-4 border-0">
+                          <div
+                            onClick={(e) => {
+                              resetState(e);
+                              setScan(true);
+                            }}
+                            className="side-button"
+                          >
+                            <i className="fas fa-vector-square me-3"></i>Room
+                            Scanner
+                          </div>
+                        </li>
+                      </Fragment>
+                    )}
                     {/* <li className="list-group-item px-4 border-0">
                       <div
                         onClick={(e) => {

@@ -1,4 +1,4 @@
-const Table = ({ data, showInteractions, api }) => {
+const Table = ({ data, showInteractions, api, showMsgProof }) => {
   return (
     <table className="campus-table table table-striped">
       <thead>

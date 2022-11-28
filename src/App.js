@@ -16,6 +16,7 @@ import PasswordReset from "./components/PasswordReset";
 import StaffSignUpPage from "./components/StaffSignUpPage";
 import PasswordResetLink from "./components/PasswordResetLink";
 import NonTeaching from "./components/NonTeaching";
+import Nurse from "./components/Nurse";
 import AttendanceReport from "./components/subComponents/reports/AttendanceReport";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -83,6 +84,7 @@ const App = () => {
           }
         />
         <Route path="/teaching-account" element={<Teaching />} />
+        <Route path="/school-nurse" element={<Nurse />} />
         <Route path="/non-teaching-account" element={<NonTeaching />} />
         <Route path="/print" element={<Printable />} />
         <Route path="/security" element={<Guard />} />

@@ -1,0 +1,104 @@
+.trace-all-container {
+  position: relative;
+}
+
+.trace-all-header {
+  padding: 1em 0;
+}
+.back-span {
+  cursor: pointer;
+  font-weight: 600;
+}
+.trace-all-header {
+  border-bottom: 1px solid var(--borderColor);
+}
+.trace-all-main {
+  border-radius: 10px;
+  padding: 1em;
+  margin: 1em 0;
+  min-height: 200px;
+  box-shadow: var(--shadowColorLight);
+  background: white;
+}
+.trace-all-main-header {
+  display: flex;
+}
+.trace-all-main-date,
+.trace-all-main-profile {
+  padding: 1em;
+}
+.trace-all-main-date {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.trace-all-starting-date {
+  font-weight: 600;
+  padding: 0.5em 0;
+}
+/* =======Map View Start========= */
+.trace-all-map-view {
+  position: absolute;
+  left: 0;
+  margin-top: 5em;
+  width: 100%;
+  height: 600px;
+  background: #333;
+  display: flex;
+  overflow: hidden;
+  border-radius: 5px;
+  box-shadow: var(--shadowColorLight);
+}
+.trace-all-map-view-left {
+  width: 25%;
+  padding: 1em;
+  color: white;
+}
+.trace-all-map-view-right {
+  width: 75%;
+  background: var(--red);
+}
+.map-view-closer {
+  cursor: pointer;
+}
+/* =======Map View End========= */
+.tam-restrict,
+.tam-report {
+  transition: 0.5s ease;
+  margin: 0 1em;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.tam-restrict:hover,
+.tam-report:hover {
+  box-shadow: var(--shadowColorLight);
+}
+.tam-restrict i,
+.tam-report i {
+  color: var(--blue);
+}
+.trace-all-main-content {
+  margin: 1em 0;
+}
+.dates-header {
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+.fragment-wrap {
+  padding: 1em;
+}
+.all-rooms-visited-section {
+  padding: 1em;
+}
+.visited-room-details {
+  margin-bottom: 1em;
+}
+.vrd-header {
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+  background: var(--teal);
+  color: white;
+}

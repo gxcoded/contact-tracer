@@ -43,6 +43,9 @@ const Login = () => {
         case "62cb91b12c5804049b716d47":
           window.location.href = "/school-admin";
           break;
+        case "637ef41babeb211183ca4824":
+          window.location.href = "/school-nurse";
+          break;
         case "62cb8add107251b0d1d0b641":
           window.location.href = "/teaching-account";
           break;

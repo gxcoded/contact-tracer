@@ -1,4 +1,21 @@
-const ThreadsTable = ({ data, showInteractions, api, roles, showMsgProof }) => {
+import axios from "axios";
+import { useState, useEffect } from "react";
+
+const ThreadsTable = ({
+  data,
+  showInteractions,
+  api,
+  roles,
+  showMsgProof,
+  campus,
+}) => {
+  const [cases, setCases] = useState([]);
+  const [url] = useState(process.env.REACT_APP_URL);
+
+  useEffect(() => {
+    loadCases();
+  }, []);
+
   const getRole = (id) => {
     let description = "";
     roles.forEach((role) => {
@@ -16,6 +33,28 @@ const ThreadsTable = ({ data, showInteractions, api, roles, showMsgProof }) => {
     });
 
     return `${date} ${time}`;
+  };
+  // ===========cases==============
+
+  const loadCases = async () => {
+    const data = await fetchCases();
+    setCases(data);
+  };
+
+  const fetchCases = async () => {
+    const { data } = await axios.post(`${url}/getAllCases`, {
+      campus,
+    });
+
+    return data;
+  };
+
+  const casesChecker = (id) => {
+    let traced = false;
+    cases.forEach((cs) => {
+      cs.report === id && (traced = true);
+    });
+    return;
   };
 
   return (
@@ -36,6 +75,9 @@ const ThreadsTable = ({ data, showInteractions, api, roles, showMsgProof }) => {
           </th>
           <th className="fw-bold" scope="col">
             Date Reported
+          </th>
+          <th className="fw-bold" scope="col">
+            Status
           </th>
           {/* <th className="fw-bold" scope="col">
             Address
@@ -63,10 +105,16 @@ const ThreadsTable = ({ data, showInteractions, api, roles, showMsgProof }) => {
             <td>{getRole(list.accountOwner.role)}</td>
             <td>{list.accountOwner.username}</td>
             <td>{dateFormatter(list.dateSent)}</td>
-            {/* <td>{list.accountOwner.address}</td> */}
+            <td>
+              {casesChecker(list._id) ? (
+                <div className="text-success">Traced</div>
+              ) : (
+                <div className="text-danger">Untraced</div>
+              )}
+            </td>
             <td className="text-center">
               <button
-                onClick={() => showMsgProof(list.accountOwner)}
+                onClick={() => showInteractions(list.accountOwner)}
                 className="btn btn-primary"
               >
                 Details

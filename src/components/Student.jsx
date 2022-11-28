@@ -14,6 +14,8 @@ import SvgDisplay from "./SvgDisplay";
 import Movement from "./subComponents/Movement";
 import Positive from "./subComponents/Positive";
 import Scanner from "./subComponents/Scanner";
+import ChatNurse from "./subComponents/ChatNurse";
+import swal from "sweetalert";
 
 const Student = ({ vaxStatsList, genderList }) => {
   const [accountInfo, setAccountInfo] = useState({});
@@ -26,6 +28,8 @@ const Student = ({ vaxStatsList, genderList }) => {
   const [scan, setScan] = useState(false);
   const [url] = useState(process.env.REACT_APP_URL);
   const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [allowed, setAllowed] = useState(false);
+  const [chat, setChat] = useState(false);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -34,13 +38,29 @@ const Student = ({ vaxStatsList, genderList }) => {
       const info = await getInfo();
       console.log(info);
       setAccountInfo(info);
+      isAllowed(info._id);
     };
 
     fetchInfo();
     setTimeout(() => {
       setLoading(false);
-    }, 5000);
+    }, 2000);
   }, []);
+
+  //status checker
+  const isAllowed = async (id) => {
+    const response = await requestChecker(id);
+
+    setAllowed(response);
+  };
+
+  const requestChecker = async (id) => {
+    const { data } = await axios.post(`${url}/statusChecker`, {
+      id,
+    });
+
+    return data;
+  };
 
   //get account Information
   const getInfo = async () => {
@@ -61,6 +81,7 @@ const Student = ({ vaxStatsList, genderList }) => {
     setMovements(false);
     setPositive(false);
     setScan(false);
+    setChat(false);
     toggleLeftBar();
   };
 
@@ -68,6 +89,9 @@ const Student = ({ vaxStatsList, genderList }) => {
     document.querySelector("#navLeft").classList.toggle("shown");
   };
 
+  const notAllowedAlert = () => {
+    swal("Not Allowed!", "You are not allowed to use this Feature!", "warning");
+  };
   return (
     <div className="sudo-container">
       {loading ? (
@@ -123,12 +147,15 @@ const Student = ({ vaxStatsList, genderList }) => {
                         <i className="fas fa-id-card-alt me-3"></i>Profile
                       </div>
                     </li>
-
                     <li className="list-group-item px-4 border-0">
                       <div
                         onClick={(e) => {
-                          toggleActive(e);
-                          setScan(true);
+                          if (allowed) {
+                            toggleActive(e);
+                            setScan(true);
+                          } else {
+                            notAllowedAlert();
+                          }
                         }}
                         className="side-button"
                       >
@@ -150,12 +177,26 @@ const Student = ({ vaxStatsList, genderList }) => {
                       <div
                         onClick={(e) => {
                           toggleActive(e);
+                          setChat(true);
+                        }}
+                        className="ct-nav-btn  side-button"
+                      >
+                        <span className="">
+                          <i className="fab fa-rocketchat me-3"></i>Chat Campus
+                          Nurse
+                        </span>
+                      </div>
+                    </li>
+                    <li className="list-group-item px-4 border-0">
+                      <div
+                        onClick={(e) => {
+                          toggleActive(e);
                           setPositive(true);
                         }}
                         className="side-button"
                       >
                         <i className="text-danger fas fa-prescription me-3"></i>
-                        I'm COVID Positive
+                        Health Status
                       </div>
                     </li>
                   </ul>
@@ -258,6 +299,7 @@ const Student = ({ vaxStatsList, genderList }) => {
                   </div>
                 )}
                 {credentials && <CredentialsPage accountInfo={accountInfo} />}
+                {chat && <ChatNurse accountInfo={accountInfo} />}
                 {scan && <Scanner accountInfo={accountInfo} />}
                 {movements && <Movement accountInfo={accountInfo} />}
                 {positive && <Positive accountInfo={accountInfo} />}
