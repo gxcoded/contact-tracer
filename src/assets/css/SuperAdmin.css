@@ -9,6 +9,7 @@
   height: 100vh;
   overflow: auto;
   padding: 1em;
+  padding-bottom: 10em;
   width: 20%;
   box-shadow: var(--shadowColor);
 }
