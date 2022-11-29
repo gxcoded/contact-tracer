@@ -13,6 +13,7 @@ const Scanner = ({ accountInfo }) => {
   const [allowed, setAllowed] = useState(true);
   const [location, setLocation] = useState("");
   const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const props = { facingMode: "user" };
 
   useEffect(() => {
     console.log(accountInfo);
@@ -69,6 +70,9 @@ const Scanner = ({ accountInfo }) => {
     return `${date} ${time}`;
   };
 
+  const constrain = (e) => {
+    console.log(e);
+  };
   return (
     <div className="entrance-scan-container">
       <div
@@ -137,6 +141,7 @@ const Scanner = ({ accountInfo }) => {
               onError={handleError}
               onScan={handleScan}
               onResult={showResult}
+              constraints={props}
             />
           </div>
         ) : (
