@@ -6,7 +6,7 @@
   height: 100vh;
 }
 .student-main {
-  width: 1000px;
+  width: 95%;
   /* background: linear-gradient(
     rgba(255, 255, 255, 0.9),
     rgba(255, 255, 255, 0.9)
@@ -20,6 +20,7 @@
   justify-content: center;
   align-items: center;
   box-shadow: var(--shadowColor);
+  margin-left: 1em;
 }
 
 /* .student-right-bg {
