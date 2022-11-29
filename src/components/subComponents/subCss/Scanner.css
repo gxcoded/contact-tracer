@@ -8,26 +8,23 @@
 .entrance-scan-main {
   width: 300px;
   height: 400px;
-  padding: 1em;
+  /* padding: 1em; */
   position: relative;
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   background: white;
   box-shadow: var(--shadowColor);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .entrance-scanner-frame {
-  position: absolute;
-  left: 0;
-  top: 0;
-  /* height: 100%;
-  width: 100%; */
-
   padding: 0 !important;
 }
 .entrance-scanner {
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   margin: 0;
 }
 .scanner-frame-wrap {
