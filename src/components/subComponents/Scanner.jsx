@@ -140,7 +140,8 @@ const Scanner = ({ accountInfo }) => {
               onError={handleError}
               onScan={handleScan}
               onResult={showResult}
-              facingMode={"environment"}
+              key={"environment"}
+              constraints={{ facingMode: "environment" }}
             />
           </div>
         ) : (
