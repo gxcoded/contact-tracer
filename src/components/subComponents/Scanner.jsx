@@ -13,7 +13,6 @@ const Scanner = ({ accountInfo }) => {
   const [allowed, setAllowed] = useState(true);
   const [location, setLocation] = useState("");
   const [api] = useState(process.env.REACT_APP_API_SERVER);
-  const props = { facingMode: "user" };
 
   useEffect(() => {
     console.log(accountInfo);
@@ -141,7 +140,7 @@ const Scanner = ({ accountInfo }) => {
               onError={handleError}
               onScan={handleScan}
               onResult={showResult}
-              constraints={props}
+              facingMode={"environment"}
             />
           </div>
         ) : (

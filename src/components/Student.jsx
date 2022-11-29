@@ -159,7 +159,7 @@ const Student = ({ vaxStatsList, genderList }) => {
                         }}
                         className="side-button"
                       >
-                        <i className="fas fa-vector-square me-3"></i>Scanner
+                        <i className="fas fa-vector-square me-3"></i>Scanner1
                       </div>
                     </li>
                     <li className="list-group-item px-4 border-0">
