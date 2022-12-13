@@ -10,11 +10,12 @@ const ChatNurse = ({ accountInfo }) => {
   const [chatThread, setChatThread] = useState([]);
   const bottomTrigger = document.querySelector("#bottomTrigger");
   const [focused, setFocused] = useState(false);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     loadNurseInfo();
     loadChat();
-  }, []);
+  }, [reload]);
 
   const fetchNurseInfo = async () => {
     const { data } = await axios.post(`${url}/getNurseInfo`, {
@@ -33,7 +34,7 @@ const ChatNurse = ({ accountInfo }) => {
     if (text) {
       if (chatSent()) {
         setText("");
-        loadChat();
+        setReload(!reload);
         bottomTrigger.click();
       } else {
         alert("failed");
@@ -84,6 +85,14 @@ const ChatNurse = ({ accountInfo }) => {
 
     return `${date} ${time}`;
   };
+
+  const checkScreenWidth = () => {
+    if (window.screen.width < 500) {
+      return true;
+    }
+
+    return false;
+  };
   return (
     <div className="chat-nurse-container">
       <div className="chat-nurse-header">
@@ -133,10 +142,16 @@ const ChatNurse = ({ accountInfo }) => {
             )}
             <div id="bottom" style={{ height: "100px" }}></div>
           </div>
-          <div className={`chat-input ${focused && "on-top-of-key"}`}>
+          <div
+            className={`chat-input ${
+              focused && checkScreenWidth() && "on-top-of-key"
+            }`}
+          >
             <div className="chat-input-main">
               <input
-                onFocus={(e) => setFocused(true)}
+                onFocus={(e) => {
+                  setFocused(true);
+                }}
                 onBlur={(e) => setFocused(false)}
                 onKeyUp={(e) => {
                   e.keyCode === 13 && chatSender();

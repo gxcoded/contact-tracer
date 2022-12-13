@@ -4,7 +4,15 @@ import ShowInteractions from "./ShowInteractions";
 import TraceAll from "./TraceAll";
 import { useState, useEffect, Fragment } from "react";
 
-const Interactions = ({ current, toggleView, showMsgProof }) => {
+const Interactions = ({
+  current,
+  toggleView,
+  showMsgProof,
+  defaultCenter,
+  message,
+  reloader,
+  currentProofId,
+}) => {
   const [api] = useState(process.env.REACT_APP_API_SERVER);
   const [showInteractions, setShowInteractions] = useState(false);
   const [traceAll, setTraceAll] = useState(false);
@@ -15,6 +23,9 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
   const [oneDay] = useState(86400000);
   const [fiveHours] = useState(36000000);
   const [currentDate, setCurrentDate] = useState("");
+  const [lastVisit, setLastVisit] = useState(Date.now().toString());
+  const [defaultTest, setDefaultTest] = useState(Date.now().toString());
+  const [customStart, setCustomStart] = useState(Date.now().toString());
   const [proof, setProof] = useState([]);
   const [defaultDate] = useState(
     new Date().toISOString().toString().slice(0, 10)
@@ -29,13 +40,14 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
     loadData();
     loadDates(days);
     getValidProof();
+    loadLastLog();
   }, []);
 
   //=======Proof==========
 
   const fetchProof = async () => {
     const { data } = await axios.post(`${url}/getValidProof`, {
-      accountOwner: current._id,
+      id: currentProofId,
     });
     return data;
   };
@@ -44,6 +56,7 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
     const proof = await fetchProof();
     console.log(proof);
     setProof(proof);
+    proof.length > 0 && setDefaultTest(proof[0].dateTested);
   };
 
   const loadData = async () => {
@@ -67,6 +80,7 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
   const updateRange = (range) => {
     let array = [];
     let start = Number(new Date(customDate).getTime());
+    console.log(start);
 
     for (let i = 0; i < range; i++) {
       let day = {
@@ -154,9 +168,30 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
 
     return `${date}`;
   };
+
   // const customStartDate = (value) => {
   //   alert(Number(new Date(value).getTime()));
   // };
+
+  const loadLastLog = async () => {
+    const last = await fetchLastLog();
+    setLastVisit(last);
+    console.log(last._id);
+  };
+
+  const fetchLastLog = async () => {
+    const { data } = await axios.post(`${url}/getLastLog`, {
+      id: current._id,
+    });
+    return data;
+  };
+
+  const dayCounter = (sent) => {
+    const now = Date.now().toString();
+    const total = (Number(now) - Number(sent)) / 86400000;
+
+    return Math.floor(total);
+  };
 
   return (
     <div className="interactions-container ">
@@ -165,8 +200,14 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
           contacts={contacts}
           current={current}
           toggleTrace={toggleTrace}
-          customDate={customDate}
+          customDate={lastVisit}
+          // customDate={customStart}
           toggleInteractions={toggleInteractions}
+          defaultCenter={defaultCenter}
+          defaultTest={defaultTest}
+          message={message}
+          proofId={proof.length > 0 && proof[0]._id}
+          reloader={reloader}
         />
       ) : (
         <Fragment>
@@ -175,6 +216,7 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
               toggleInteractions={toggleInteractions}
               currentDate={currentDate}
               currentAccount={current}
+              defaultCenter={defaultCenter}
             />
           ) : (
             <Fragment>
@@ -187,11 +229,22 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
               <div className="show-proof">
                 {proof.length > 0 ? (
                   <div
-                    style={{ cursor: "pointer" }}
-                    onClick={() => showMsgProof(current)}
+                  // style={{ cursor: "pointer" }}
+                  // onClick={() => showMsgProof(current)}
                   >
                     <div className="proof-section">
+                      <div className="h5 py-2">Reported Positive</div>
                       <div className="proof-section-header">Report Details</div>
+                      <div className="day-count-section border-bottom py-2 mb-2">
+                        <div className="day-count-label d-flex">
+                          Sent
+                          <div className="day-count-display mx-2 fw-bold text-primary">
+                            {" "}
+                            {dayCounter(proof[0].dateSent)}
+                          </div>
+                          day(s) ago.
+                        </div>
+                      </div>
                       <div className="proof-section-details">
                         <div className="proof-section-details-left">
                           <img
@@ -218,6 +271,12 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
                             <div className="proof-section-text">
                               {dateFormatter(proof[0].resultDate)}
                             </div>
+                            <div className="proof-section-label">
+                              Last Visit Date
+                            </div>
+                            <div className="proof-section-text">
+                              {dateFormatter(lastVisit)}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -225,7 +284,7 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
                   </div>
                 ) : (
                   <div className="show-proof-content text-success">
-                    This user does not sent any Proof in the last 14 days.
+                    This user does not sent any Proof .
                   </div>
                 )}
               </div>
@@ -297,7 +356,10 @@ const Interactions = ({ current, toggleView, showMsgProof }) => {
                         value={customDate}
                         onChange={(e) => {
                           {
+                            new Date(customDate).getTime();
                             // customStartDate(e.target.value);
+                            setCustomStart(new Date(e.target.value).getTime());
+                            // console.log(e.target.value);
                             setCustomDate(e.target.value);
                             updateDates(
                               Number(new Date(e.target.value).getTime())

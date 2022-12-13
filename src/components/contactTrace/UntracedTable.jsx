@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const ThreadsTable = ({
+const UntracedTable = ({
   data,
   showInteractions,
   api,
@@ -14,7 +14,6 @@ const ThreadsTable = ({
 
   useEffect(() => {
     loadCases();
-    console.log(data);
   }, []);
 
   const getRole = (id) => {
@@ -46,17 +45,14 @@ const ThreadsTable = ({
     const { data } = await axios.post(`${url}/getAllUntracedCase`, {
       campus,
     });
-
     return data;
   };
 
   const casesChecker = (id) => {
-    let traced = true;
+    let traced = false;
 
     cases.forEach((cs) => {
-      if (cs.report === id) {
-        traced = false;
-      }
+      cs.report === id && (traced = true);
     });
     return traced;
   };
@@ -93,42 +89,43 @@ const ThreadsTable = ({
         </tr>
       </thead>
       <tbody>
-        {data.map((list) => (
-          <tr key={list._id}>
-            <td>
-              <img
-                src={`${api}/${list.accountOwner.image}`}
-                // src={require(`../../../../server/uploads/${list.image}`)}
-                alt={list._id}
-                className="table-image"
-              />
-            </td>
-            <td>
-              {list.accountOwner.lastName}, {list.accountOwner.firstName}
-            </td>
-            <td>{getRole(list.accountOwner.role)}</td>
-            <td>{list.accountOwner.username}</td>
-            <td>{dateFormatter(list.dateSent)}</td>
-            <td>
-              {casesChecker(list._id) ? (
-                <div className="text-success">Traced</div>
-              ) : (
-                <div className="text-danger">Untraced</div>
-              )}
-            </td>
-            <td className="text-center">
-              <button
-                onClick={() => showInteractions(list.accountOwner, list._id)}
-                className="btn btn-primary"
-              >
-                Details
-              </button>
-            </td>
-          </tr>
-        ))}
+        {data.map(
+          (list) =>
+            casesChecker(list._id) && (
+              <tr key={list._id}>
+                <td>
+                  <img
+                    src={`${api}/${list.accountOwner.image}`}
+                    // src={require(`../../../../server/uploads/${list.image}`)}
+                    alt={list._id}
+                    className="table-image"
+                  />
+                </td>
+                <td>
+                  {list.accountOwner.lastName}, {list.accountOwner.firstName}
+                </td>
+                <td>{getRole(list.accountOwner.role)}</td>
+                <td>{list.accountOwner.username}</td>
+                <td>{dateFormatter(list.dateSent)}</td>
+                <td>
+                  <div className="text-danger">Untraced</div>
+                </td>
+                <td className="text-center">
+                  <button
+                    onClick={() =>
+                      showInteractions(list.accountOwner, list._id)
+                    }
+                    className="btn btn-primary"
+                  >
+                    Details
+                  </button>
+                </td>
+              </tr>
+            )
+        )}
       </tbody>
     </table>
   );
 };
 
-export default ThreadsTable;
+export default UntracedTable;

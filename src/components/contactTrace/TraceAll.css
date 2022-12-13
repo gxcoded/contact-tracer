@@ -12,6 +12,10 @@
 .trace-all-header {
   border-bottom: 1px solid var(--borderColor);
 }
+.trace-all-img {
+  height: 70px;
+  width: 70px;
+}
 .trace-all-main {
   border-radius: 10px;
   padding: 1em;
@@ -22,6 +26,20 @@
 }
 .trace-all-main-header {
   display: flex;
+  font-size: 0.9rem;
+  margin: 1em 0;
+}
+.s-i-m-profile-status {
+  font-size: 0.8rem;
+}
+.s-i-m-profile-status-label {
+  padding: 0.2em;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+.s-i-m-profile-status-label:hover {
+  background: var(--teal);
+  color: white;
 }
 .trace-all-main-date,
 .trace-all-main-profile {
@@ -57,10 +75,55 @@
 }
 .trace-all-map-view-right {
   width: 75%;
-  background: var(--red);
+  background: white;
 }
 .map-view-closer {
   cursor: pointer;
+}
+.trace-all-info-dates {
+  padding: 1em;
+  display: flex;
+}
+.trace-all-info-dates-right {
+  margin-left: 1em;
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 500;
+  background: var(--blue);
+  border-radius: 10px;
+  box-shadow: var(--shadowColorLight);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.trace-all-date-guide {
+  padding: 1em;
+}
+.trace-all-map-info-header {
+  margin-top: 0.5em;
+  padding: 1em;
+  text-align: center;
+  background: white;
+  color: black;
+  border-radius: 10px;
+  box-shadow: var(--shadowColorLight);
+  font-weight: 600;
+}
+.trace-all-map-info-list {
+  height: 400px;
+  overflow: auto;
+  margin-top: 1em;
+  padding: 0.5em;
+  font-size: 0.8em;
+}
+.trace-all-map-info-list-card {
+  padding: 0.5em;
+  background: var(--blue);
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  margin: 0.2em 0;
 }
 /* =======Map View End========= */
 .tam-restrict,
@@ -72,7 +135,7 @@
 }
 .tam-restrict:hover,
 .tam-report:hover {
-  box-shadow: var(--shadowColorLight);
+  color: var(--blue);
 }
 .tam-restrict i,
 .tam-report i {

@@ -20,7 +20,7 @@
   justify-content: center;
   align-items: center;
   box-shadow: var(--shadowColor);
-  margin-left: 1em;
+  margin-left: 0.5em;
 }
 
 /* .student-right-bg {

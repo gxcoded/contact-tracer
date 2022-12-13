@@ -135,6 +135,7 @@ const Chats = ({ accountInfo }) => {
       chat.classList.remove("active-chat");
     });
   };
+
   return (
     <div className="chat-container">
       <div className="chat-main-header">
@@ -142,31 +143,43 @@ const Chats = ({ accountInfo }) => {
         <span className="ms-2">Chats</span>
       </div>
       <div className="chat-main">
-        <a id="bottomSlide" href="#bottomChat" style={{ display: "none" }}></a>
-        <div className="chat-main-left">
-          {chatThread.map((thread) => (
-            <div
-              onClick={(e) => {
-                setCurrentThread(thread);
-                setShowRightContent(true);
-                toggleActive(e.target);
-              }}
-              key={thread._id}
-              className="chat-thread"
-            >
-              <img
-                className="chat-thread-img"
-                src={`${api}/${thread.sender.image}`}
-                alt="chat-thread-img"
-              />
-              <div className="chat-thread-details">
-                <div className="chat-thread-name">{`${thread.sender.firstName} ${thread.sender.lastName}`}</div>
-                <div className="chat-thread-date">
-                  {dateFormatter(thread.dateSent)}
+        <a id="bottomSlide" href="#bottomChat" style={{ display: "none" }}>
+          Slide
+        </a>
+        <div className="chat-main-left position-relative">
+          {chatThread.length > 0 ? (
+            <div>
+              {chatThread.map((thread) => (
+                <div
+                  onClick={(e) => {
+                    setCurrentThread(thread);
+                    setShowRightContent(true);
+                    toggleActive(e.target);
+                  }}
+                  key={thread._id}
+                  className="chat-thread"
+                >
+                  <img
+                    className="chat-thread-img"
+                    src={`${api}/${thread.sender.image}`}
+                    alt="chat-thread-img"
+                  />
+                  <div className="chat-thread-details">
+                    <div className="chat-thread-name">{`${thread.sender.firstName} ${thread.sender.lastName}`}</div>
+                    <div className="chat-thread-date">
+                      {dateFormatter(thread.dateSent)}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
+              {/* <div
+                id="bottomThread"
+                style={{ height: "100px", paddingBottom: "2em" }}
+              ></div> */}
             </div>
-          ))}
+          ) : (
+            <div className="empty-thread">No Messages Yet...</div>
+          )}
         </div>
         <div className="chat-main-right">
           {showRightContent ? (
@@ -209,9 +222,10 @@ const Chats = ({ accountInfo }) => {
                       </div>
                     )
                   )}
+                  <div id="bottomChat" style={{ height: "100px" }}></div>
                 </div>
               </div>
-              <div id="bottomChat" style={{ height: "100px" }}></div>
+
               <div className="chat-main-right-input border">
                 <div className="chat-input-main">
                   <input
@@ -226,6 +240,7 @@ const Chats = ({ accountInfo }) => {
                   />
                   <button
                     onClick={() => {
+                      bottomTrigger.click();
                       chatSender();
                     }}
                     className="btn btn-primary mt-2"

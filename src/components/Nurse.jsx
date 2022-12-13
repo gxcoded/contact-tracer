@@ -28,6 +28,7 @@ const SchoolAdmin = () => {
   const [showMap, setShowMap] = useState(true);
   const [notification, setNotification] = useState(false);
   const [chat, setChat] = useState(false);
+  const [newChatCount, setNewChatCount] = useState(0);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -37,7 +38,7 @@ const SchoolAdmin = () => {
       const fetchedRoles = await fetchRoles();
 
       setAccountInfo(info);
-
+      loadNewChats(info);
       setRoles(fetchedRoles);
 
       // setInterval(() => {
@@ -52,8 +53,20 @@ const SchoolAdmin = () => {
     }, 2000);
   }, []);
 
-  //messages
+  //chat count
+  const loadNewChats = async (info) => {
+    const total = await fetchNewChats(info);
+    setNewChatCount(total);
+  };
 
+  const fetchNewChats = async (info) => {
+    const { data } = await axios.post(`${url}/newChatCounter`, {
+      account: info._id,
+    });
+
+    return data;
+  };
+  //messages
   const msgReload = async (id) => {
     const fetchedMessages = await fetchMessages(id);
     console.log(id);
@@ -189,11 +202,11 @@ const SchoolAdmin = () => {
                         className="ct-nav-btn  side-button"
                       >
                         <span className="">
-                          <i className="fab fa-rocketchat me-3"></i>Chats
+                          <i className="fab fa-rocketchat me-3"></i>Chats{" "}
                         </span>
-                        {messages.length > 0 && (
-                          <span className="notification-counter">
-                            {messages.length}
+                        {newChatCount > 0 && (
+                          <span className="chat-count-display border">
+                            {newChatCount}
                           </span>
                         )}
                       </div>
@@ -240,7 +253,7 @@ const SchoolAdmin = () => {
                 )}
                 <div className="sudo-right-top sa-right-top">
                   <div
-                    onClick={() => msgToggler()}
+                    // onClick={() => msgToggler()}
                     className={`notification-link d-flex align-items-center ${
                       messages.length > 0 && "bold-notif"
                     }`}

@@ -391,7 +391,7 @@ const Attendance = ({ room }) => {
               </CSVLink>
             </div>
           )}
-          <div className="attendance-records-main mt-5 bg-primary">
+          <div className="attendance-records-main mt-5">
             <div className="attendance-records-main-left">
               <div className="record-table-header border">Students</div>
               {students.map((list) => (

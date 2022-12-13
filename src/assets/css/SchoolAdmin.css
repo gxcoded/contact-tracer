@@ -51,3 +51,14 @@
 .s-admin-right {
   position: relative;
 }
+.chat-count-display {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background: var(--red) !important;
+  color: var(--red) !important;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

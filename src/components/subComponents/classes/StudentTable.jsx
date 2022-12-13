@@ -15,6 +15,7 @@ const StudentTable = ({ room, classStudents, studentList, loadStudents }) => {
       search("");
     }, 1000);
   }, []);
+
   const checker = (id) => {
     let display = false;
     classStudents.forEach((student) => {

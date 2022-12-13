@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const ThreadsTable = ({
+const NewThreadsTable = ({
   data,
   showInteractions,
   api,
@@ -14,7 +14,6 @@ const ThreadsTable = ({
 
   useEffect(() => {
     loadCases();
-    console.log(data);
   }, []);
 
   const getRole = (id) => {
@@ -48,17 +47,6 @@ const ThreadsTable = ({
     });
 
     return data;
-  };
-
-  const casesChecker = (id) => {
-    let traced = true;
-
-    cases.forEach((cs) => {
-      if (cs.report === id) {
-        traced = false;
-      }
-    });
-    return traced;
   };
 
   return (
@@ -110,11 +98,7 @@ const ThreadsTable = ({
             <td>{list.accountOwner.username}</td>
             <td>{dateFormatter(list.dateSent)}</td>
             <td>
-              {casesChecker(list._id) ? (
-                <div className="text-success">Traced</div>
-              ) : (
-                <div className="text-danger">Untraced</div>
-              )}
+              <div className="text-danger">Untraced</div>
             </td>
             <td className="text-center">
               <button
@@ -131,4 +115,4 @@ const ThreadsTable = ({
   );
 };
 
-export default ThreadsTable;
+export default NewThreadsTable;

@@ -18,6 +18,7 @@ import PasswordResetLink from "./components/PasswordResetLink";
 import NonTeaching from "./components/NonTeaching";
 import Nurse from "./components/Nurse";
 import AttendanceReport from "./components/subComponents/reports/AttendanceReport";
+import ContactTracingReport from "./components/subComponents/reports/ContactTracingReport";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -111,6 +112,10 @@ const App = () => {
           }
         />
         <Route path="/attendance-report" element={<AttendanceReport />} />
+        <Route
+          path="/contact-tracing-report"
+          element={<ContactTracingReport />}
+        />
       </Routes>
     </BrowserRouter>
   );

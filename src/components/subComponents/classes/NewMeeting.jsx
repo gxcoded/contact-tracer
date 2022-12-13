@@ -3,7 +3,7 @@ import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import swal from "sweetalert";
 
-const NewMeeting = ({ room, onGoing, loadMeeting }) => {
+const NewMeeting = ({ room, onGoing, loadMeeting, modalToggler }) => {
   const [showScanner, setShowScanner] = useState(false);
   const [rooms, setRooms] = useState([]);
 
@@ -91,6 +91,8 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
 
   const toggleScanner = (e) => {
     e.preventDefault();
+    // alert(selectedRoom);
+    // alert(start);
     swal({
       title: "Start Now?",
       buttons: true,
@@ -127,7 +129,7 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
   };
 
   const endMeeting = async () => {
-    alert(onGoing._id);
+    // alert(onGoing._id);
     swal({
       title: "End Meeting?",
       buttons: true,
@@ -182,6 +184,17 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
         }
       }
     });
+  };
+
+  const timeFormatter = (timeString) => {
+    // const date = new Date(Number(timeString)).toString().slice(4, 15);
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${time}`;
   };
 
   const resetLogs = () => {
@@ -282,7 +295,20 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
         className={`new-meeting-right mx-1 
         }`}
       >
-        <div className="new-meeting-logs-right-header">Students</div>
+        <div></div>
+        <div className=" new-meeting-logs-right-header d-flex justify-content-between align-items-center">
+          <span>Students </span>
+          {checkOngoing() && (
+            <button
+              onClick={(e) => {
+                modalToggler(onGoing._id);
+              }}
+              className={`btn-sm meeting-nav bg-danger text-light`}
+            >
+              <i className="far fa-calendar-times me-2"></i>Excuse Student
+            </button>
+          )}
+        </div>
         <table className="campus-table table table-striped current-meeting-log-table">
           <tbody>
             {studentLogs.length > 0 ? (
@@ -303,14 +329,14 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
                     </td>
 
                     <td>{list.accountScanned.idNumber}</td>
-                    <td>{convert(list.start)}</td>
+                    <td>{timeFormatter(list.start)}</td>
                     <td>
-                      <div className="table-options">
+                      <div className="table-options fw-normal fst-italic">
                         <span
                           onClick={() => removeLog(list._id)}
                           className="option-delete"
                         >
-                          <i className="fas fa-trash-alt"></i>
+                          Remove
                         </span>
                       </div>
                     </td>
@@ -351,7 +377,7 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
                     </td>
 
                     <td>{list.accountScanned.idNumber}</td>
-                    <td>{convert(list.start)}</td>
+                    <td>{timeFormatter(list.start)}</td>
                     <td>
                       <div className="table-options">
                         <span
@@ -399,7 +425,7 @@ const NewMeeting = ({ room, onGoing, loadMeeting }) => {
                     </td>
 
                     <td>{list.accountScanned.username}</td>
-                    <td>{convert(list.start)}</td>
+                    <td>{timeFormatter(list.start)}</td>
                     <td>
                       <div className="table-options">
                         <span

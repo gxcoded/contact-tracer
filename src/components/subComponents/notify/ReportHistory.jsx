@@ -309,13 +309,13 @@ const ReportHistory = ({ accountInfo }) => {
                     </div>
                   ) : (
                     <div className="admin-reply-msg">
-                      School Admin has no reply yet..
+                      School Nurse has no reply yet..
                     </div>
                   )}
                 </div>
               </div>
             </div>
-            <div className="msg-neg-stats bg-light">
+            {/* <div className="msg-neg-stats bg-light">
               <div className="msg-neg-header">Negative Results</div>
               {Object.keys(negativeChecker(msg._id)).length > 0 ? (
                 <div className="sent-message">
@@ -368,7 +368,7 @@ const ReportHistory = ({ accountInfo }) => {
                   I've got my negative Result
                 </button>
               )}
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

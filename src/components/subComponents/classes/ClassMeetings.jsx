@@ -4,7 +4,7 @@ import MeetingLogs from "./MeetingLogs";
 import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 
-const ClassMeetings = ({ room }) => {
+const ClassMeetings = ({ room, modalToggler }) => {
   const [newMeeting, setNewMeeting] = useState(false);
   const [meetingLogs, setMeetingLogs] = useState(false);
   const [onGoing, setOnGoing] = useState({});
@@ -82,6 +82,7 @@ const ClassMeetings = ({ room }) => {
                 room={room}
                 onGoing={onGoing}
                 loadMeeting={loadMeeting}
+                modalToggler={modalToggler}
               />
             )}
             {meetingLogs && <MeetingLogs room={room} />}

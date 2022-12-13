@@ -23,6 +23,7 @@ const Map = ({ getCoordinates, isEdit, currentCoords, defaultCoordinates }) => {
       setLoading(false);
     }, 2000);
   }, []);
+
   const setMarkCoordinates = (event) => {
     getCoordinates({ lat: event.latLng.lat(), lng: event.latLng.lng() });
     console.log("lat " + event.latLng.lat());

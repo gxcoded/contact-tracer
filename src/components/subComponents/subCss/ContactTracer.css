@@ -5,15 +5,17 @@
   box-shadow: var(--shadowColor);
   padding: 2em;
   margin-bottom: 1em;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: start;
+  align-items: start; */
+}
+.contact-tracer-summary-bottom {
+  text-align: right;
 }
 .contact-tracer-summary-cards {
   display: flex;
   align-items: center;
-  margin-top: 1em;
   flex-wrap: wrap;
 }
 .contact-tracer-card {
@@ -29,18 +31,16 @@
   flex-direction: column;
   border-left: 5px solid var(--red);
 }
+.negative-cards {
+  border-left: 5px solid var(--teal);
+}
 
 .contact-tracer-search {
   height: 200px;
-  width: 500px;
+  padding: 1em;
+  margin-top: 1em;
   border-radius: 20px;
   /* box-shadow: var(--shadowColorLight); */
-  margin: 0 1em;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
 .contact-tracer-card-counter {
   font-size: 3em;
@@ -89,6 +89,7 @@
   align-items: center;
 }
 .tracer-form-title {
+  padding: 1em;
   font-size: 1.2em;
   font-weight: 600;
   text-transform: uppercase;

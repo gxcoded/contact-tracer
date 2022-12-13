@@ -1,5 +1,5 @@
 import "./ReportPositive.css";
-import Image from "../../../assets/images/nfw.png";
+import Image from "../../../assets/images/negative.jpg";
 import DefaultImage from "../../../assets/images/dimg.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -93,7 +93,7 @@ const ReportPositive = ({ accountInfo }) => {
           formData.append("adminEmail", adminInfo.email);
 
           try {
-            const res = await axios.post(`${url}/reportPositive`, formData, {
+            const res = await axios.post(`${url}/reportNegative`, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
@@ -124,16 +124,8 @@ const ReportPositive = ({ accountInfo }) => {
 
   return (
     <div className="rp-container">
-      <div className="rp-left">
-        <img src={Image} alt="nfw-img" className="rp-left-img" />
-        <div className="rp-left-text">
-          You can notify the School Nurse incase you are tested positive. Please
-          take note that you need to attach an image of your test result to
-          serve as a proof.
-        </div>
-      </div>
       <div className="rp-right">
-        <div className="rp-right-header">Please Provide Some Details.</div>
+        <div className="rp-right-header text-success">Report Details.</div>
         <div className="rp-right-main">
           <div className="rp-right-main-input">
             <div className="mt-3">
@@ -220,11 +212,18 @@ const ReportPositive = ({ accountInfo }) => {
               </div>
             </div>
             <div className="rp-right-send text-end">
-              <button onClick={() => sendNow()} className="btn btn-primary">
-                <i className="fas fa-paper-plane me-2"></i>Notify Campus
+              <button onClick={() => sendNow()} className="btn btn-success">
+                <i className="fas fa-paper-plane me-2"></i>Send Report
               </button>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="rp-left">
+        <img src={Image} alt="nfw-img" className="rp-left-img" />
+        <div className="rp-left-text bg-success">
+          By this, you can notify the campus Nurse that you are already free
+          from COVID-19.
         </div>
       </div>
     </div>

@@ -46,6 +46,7 @@ const RoomList = ({ campus }) => {
     loadData();
     loadDefaultCoords();
   }, []);
+
   const fetchDefaultCoords = async () => {
     const { data } = await axios.post(`${url}/getCoordinates`, {
       campusId: campus,

@@ -10,6 +10,7 @@ const InteractionLoop = ({
   currentId,
   idSetter,
   count,
+  allRoomsSetter,
 }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [logs, setLogs] = useState([]);
@@ -19,7 +20,7 @@ const InteractionLoop = ({
 
   useEffect(() => {
     loadLogs();
-    console.log("count" + count);
+    returnRooms();
     // console.log(currentAccount);
   }, []);
 
@@ -52,7 +53,7 @@ const InteractionLoop = ({
       campus: currentAccount.campus,
       currentDate,
     });
-    console.log(data);
+    // console.log(data);
     return data;
   };
 
@@ -86,6 +87,17 @@ const InteractionLoop = ({
 
   const setter = (id) => {
     idSetter(id);
+  };
+
+  const returnRooms = () => {
+    let array = [];
+    logs.forEach((log) => {
+      if (log.room._id === currentRoom) {
+        array.push(log);
+      }
+    });
+    // console.log(array);
+    allRoomsSetter(array);
   };
 
   return (

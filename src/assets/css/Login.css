@@ -7,7 +7,7 @@
 .login-form-contents {
   position: relative;
   min-height: 400px;
-
+  width: 320px;
   border-radius: 20px;
   background: white !important;
   padding: 1em;

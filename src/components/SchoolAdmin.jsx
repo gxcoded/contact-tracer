@@ -62,6 +62,11 @@ const SchoolAdmin = () => {
   const [showMap, setShowMap] = useState(true);
 
   useEffect(() => {
+    const date = new Date().toISOString().slice(0, 10);
+
+    console.log(new Date(date).getTime());
+    console.log(Date.now().toString());
+    console.log(new Date(1670198400000 - 28800000));
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
 
     const fetchInfo = async () => {
@@ -77,7 +82,6 @@ const SchoolAdmin = () => {
       //   msgReload(info.campus._id);
       // }, 1000);
     };
-
     fetchInfo();
 
     setTimeout(() => {
@@ -449,10 +453,10 @@ const SchoolAdmin = () => {
                   />
                 )}
                 <div className="sudo-right-top sa-right-top">
-                  {/* <div>
+                  <div>
                     <i className="fas fa-qrcode me-3 "></i>
                     <span>PSU-Trace</span>
-                  </div> */}
+                  </div>
                   {/* <div
                     onClick={() => msgToggler()}
                     className={`notification-link d-flex align-items-center ${

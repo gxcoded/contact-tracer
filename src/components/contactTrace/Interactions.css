@@ -25,6 +25,9 @@
   width: 30%;
   margin-right: 1em;
 }
+.ps-img {
+  max-height: 400px;
+}
 .proof-section-details-right {
   width: 70%;
 }

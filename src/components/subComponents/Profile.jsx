@@ -28,6 +28,7 @@ const Profile = ({ accountInfo, vaxStatsList, genderList, type }) => {
     };
 
     getCourses();
+    loadLastLog();
   }, []);
 
   const fetchCourses = async () => {
@@ -67,6 +68,28 @@ const Profile = ({ accountInfo, vaxStatsList, genderList, type }) => {
       });
     }
     setEditable(false);
+  };
+
+  const loadLastLog = async () => {
+    const last = await fetchLastLog();
+    console.log(dateFormatter(last.date));
+  };
+  const fetchLastLog = async () => {
+    const { data } = await axios.post(`${url}/getLastLog`, {
+      id: accountInfo._id,
+    });
+    return data;
+  };
+
+  const dateFormatter = (timeString) => {
+    const date = new Date(Number(timeString)).toString().slice(4, 15);
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${date} ${time}`;
   };
 
   return (

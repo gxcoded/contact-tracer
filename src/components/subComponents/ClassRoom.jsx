@@ -2,13 +2,41 @@ import "../subComponents/subCss/ClassRoom.css";
 import ClassStudents from "./classes/ClassStudents";
 import ClassMeetings from "./classes/ClassMeetings";
 import Attendance from "./classes/Attendance";
-import { useState } from "react";
+import Modal from "../modals/Modal";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import swal from "sweetalert";
 
 const ClassRoom = ({ room, options }) => {
   const [students, setStudents] = useState(false);
   const [attendance, setAttendance] = useState(false);
   const [meetings, setMeetings] = useState(true);
+  const [showExModal, setShowExModal] = useState(false);
+  const [showRemarks, setShowRemarks] = useState(false);
   const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [onGoing, setOnGoing] = useState("");
+  const [classStudents, setClassStudents] = useState([]);
+  const [url] = useState(process.env.REACT_APP_URL);
+  const [remarkText, setRemarkText] = useState("");
+  const [meeting, setMeeting] = useState("");
+  const [student, setStudent] = useState("");
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+    loadStudents();
+  }, []);
+
+  const loadStudents = async () => {
+    const students = await fetchStudentList();
+    setClassStudents(students);
+  };
+  const fetchStudentList = async () => {
+    const { data } = await axios.post(`${url}/getClassRoomStudents`, {
+      classId: room._id,
+    });
+    // console.log(data);
+    return data;
+  };
 
   const toggleActive = (target) => {
     const links = document.querySelectorAll(".class-nav-links");
@@ -27,8 +55,87 @@ const ClassRoom = ({ room, options }) => {
     setAttendance(false);
   };
 
+  const modalToggler = (id) => {
+    setOnGoing(id);
+    setShowExModal(!showExModal);
+  };
+
+  const remarksToggler = (student, meeting) => {
+    setMeeting(meeting);
+    setStudent(student);
+
+    setShowRemarks(!showRemarks);
+  };
+
+  const submitExcuse = async (e) => {
+    e.preventDefault();
+    if (await excuseSent()) {
+      swal("Done!", "Marked as Excused!", "success");
+      setShowRemarks(false);
+      setRemarkText("");
+      reloader();
+    }
+  };
+
+  const excuseSent = async () => {
+    const isSent = await sendExcuse();
+
+    console.log(isSent);
+    return isSent;
+  };
+
+  const sendExcuse = async () => {
+    const { data } = await axios.post(`${url}/addExcuse`, {
+      meeting,
+      student,
+      remarks: remarkText,
+    });
+    return data;
+  };
+
+  const reloader = () => {
+    setReload(!reload);
+  };
   return (
-    <div className="class-room-container">
+    <div className="class-room-container position-relative">
+      {showRemarks && (
+        <div className="remarks-pop">
+          <div className="remarks-form">
+            <form onSubmit={submitExcuse}>
+              <div className="input-group">
+                <label>Add Remarks</label>
+                <input
+                  required
+                  value={remarkText}
+                  onChange={(e) => setRemarkText(e.target.value)}
+                  type="text"
+                  className="form-control"
+                />
+              </div>
+              <div className="input-group mt-4">
+                <div
+                  onClick={() => remarksToggler()}
+                  className="btn btn-warning"
+                >
+                  Cancel
+                </div>
+                <button className="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {showExModal && (
+        <Modal
+          reload={reload}
+          remarkText={remarkText}
+          classStudents={classStudents}
+          onGoing={onGoing}
+          room={room}
+          modalToggler={modalToggler}
+          remarksToggler={remarksToggler}
+        />
+      )}
       <div className="class-room-header ">
         <div className="class-room-header-left">
           <img
@@ -89,7 +196,7 @@ const ClassRoom = ({ room, options }) => {
       </div>
       <div className="class-room-main">
         {students && <ClassStudents room={room} />}
-        {meetings && <ClassMeetings room={room} />}
+        {meetings && <ClassMeetings modalToggler={modalToggler} room={room} />}
         {attendance && <Attendance room={room} />}
       </div>
     </div>

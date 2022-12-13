@@ -1,21 +1,20 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const ThreadsTable = ({
+const NewNegativeThreadsTable = ({
   data,
-  showInteractions,
+  showNegativeDetails,
   api,
   roles,
   showMsgProof,
   campus,
 }) => {
-  const [cases, setCases] = useState([]);
+  const [reports, setReports] = useState([]);
   const [url] = useState(process.env.REACT_APP_URL);
 
-  useEffect(() => {
-    loadCases();
-    console.log(data);
-  }, []);
+  // useEffect(() => {
+  //   loadReports();
+  // }, []);
 
   const getRole = (id) => {
     let description = "";
@@ -37,29 +36,18 @@ const ThreadsTable = ({
   };
   // ===========cases==============
 
-  const loadCases = async () => {
-    const data = await fetchCases();
-    setCases(data);
-  };
+  // const loadNegativeReports = async () => {
+  //   const data = await fetchReports();
+  //   setReports(data);
+  // };
 
-  const fetchCases = async () => {
-    const { data } = await axios.post(`${url}/getAllUntracedCase`, {
-      campus,
-    });
-
-    return data;
-  };
-
-  const casesChecker = (id) => {
-    let traced = true;
-
-    cases.forEach((cs) => {
-      if (cs.report === id) {
-        traced = false;
-      }
-    });
-    return traced;
-  };
+  // const fetchNegativeReports = async () => {
+  //   const { data } = await axios.post(`${url}/getAllNegativeReports`, {
+  //     campus,
+  //   });
+  //   console.log(data);
+  //   return data;
+  // };
 
   return (
     <table className="campus-table table table-striped">
@@ -80,9 +68,7 @@ const ThreadsTable = ({
           <th className="fw-bold" scope="col">
             Date Reported
           </th>
-          <th className="fw-bold" scope="col">
-            Status
-          </th>
+
           {/* <th className="fw-bold" scope="col">
             Address
           </th> */}
@@ -109,19 +95,13 @@ const ThreadsTable = ({
             <td>{getRole(list.accountOwner.role)}</td>
             <td>{list.accountOwner.username}</td>
             <td>{dateFormatter(list.dateSent)}</td>
-            <td>
-              {casesChecker(list._id) ? (
-                <div className="text-success">Traced</div>
-              ) : (
-                <div className="text-danger">Untraced</div>
-              )}
-            </td>
+
             <td className="text-center">
               <button
-                onClick={() => showInteractions(list.accountOwner, list._id)}
-                className="btn btn-primary"
+                onClick={() => showNegativeDetails(list.accountOwner, list._id)}
+                className="btn btn-success"
               >
-                Details
+                Show Details
               </button>
             </td>
           </tr>
@@ -131,4 +111,4 @@ const ThreadsTable = ({
   );
 };
 
-export default ThreadsTable;
+export default NewNegativeThreadsTable;

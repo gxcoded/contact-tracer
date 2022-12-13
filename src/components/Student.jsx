@@ -10,9 +10,9 @@ import LoggedOut from "./LoggedOut";
 import Profile from "./subComponents/Profile";
 import CredentialsPage from "./subComponents/CredentialsPage";
 import BounceLoader from "react-spinners/BounceLoader";
-import SvgDisplay from "./SvgDisplay";
 import Movement from "./subComponents/Movement";
 import Positive from "./subComponents/Positive";
+import Negative from "./subComponents/Negative";
 import Scanner from "./subComponents/Scanner";
 import ChatNurse from "./subComponents/ChatNurse";
 import swal from "sweetalert";
@@ -25,11 +25,16 @@ const Student = ({ vaxStatsList, genderList }) => {
   const [credentials, setCredentials] = useState(false);
   const [movements, setMovements] = useState(false);
   const [positive, setPositive] = useState(false);
+  const [negative, setNegative] = useState(false);
   const [scan, setScan] = useState(false);
   const [url] = useState(process.env.REACT_APP_URL);
   const [api] = useState(process.env.REACT_APP_API_SERVER);
   const [allowed, setAllowed] = useState(false);
   const [chat, setChat] = useState(false);
+  const [hideNotify, setHideNotify] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [newNotificationCounter, setNewNotificationCounter] = useState(0);
+  const [showNotice, setShowNotice] = useState(false);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -39,6 +44,7 @@ const Student = ({ vaxStatsList, genderList }) => {
       console.log(info);
       setAccountInfo(info);
       isAllowed(info._id);
+      loadNotifications(info._id);
     };
 
     fetchInfo();
@@ -47,6 +53,9 @@ const Student = ({ vaxStatsList, genderList }) => {
     }, 2000);
   }, []);
 
+  const notifyToggler = () => {
+    setHideNotify(!hideNotify);
+  };
   //status checker
   const isAllowed = async (id) => {
     const response = await requestChecker(id);
@@ -82,6 +91,7 @@ const Student = ({ vaxStatsList, genderList }) => {
     setPositive(false);
     setScan(false);
     setChat(false);
+    setNegative(false);
     toggleLeftBar();
   };
 
@@ -92,6 +102,70 @@ const Student = ({ vaxStatsList, genderList }) => {
   const notAllowedAlert = () => {
     swal("Not Allowed!", "You are not allowed to use this Feature!", "warning");
   };
+
+  const loadNotifications = async (id) => {
+    const notificationList = await fetchNotifications(id);
+    notice(notificationList);
+    setNotifications(notificationList);
+    countNewNotifications(notificationList);
+  };
+
+  const fetchNotifications = async (id) => {
+    const { data } = await axios.post(`${url}/getMyNotifications`, {
+      id,
+    });
+
+    return data;
+  };
+
+  const countNewNotifications = (notes) => {
+    let counter = 0;
+    notes.forEach((note) => {
+      if (!note.seen) {
+        console.log("Note");
+        counter++;
+        setNewNotificationCounter(counter);
+      }
+    });
+    setNewNotificationCounter(counter);
+  };
+
+  const sendUpdateRequest = async (id) => {
+    const updated = await updateNotificationStatus(id);
+    loadNotifications(accountInfo._id);
+  };
+
+  const updateNotificationStatus = async (id) => {
+    const { data } = await axios.post(`${url}/updateNotificationStatus`, {
+      id,
+    });
+
+    return data;
+  };
+
+  const dateFormatter = (timeString) => {
+    const date = new Date(Number(timeString)).toString().slice(4, 15);
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${date} ${time}`;
+  };
+
+  const notice = (notification) => {
+    const now = Number(Date.now().toString());
+
+    if (notification.length > 0) {
+      const count = Math.floor(
+        (now - Number(notification[0].dateSent)) / 86400000
+      );
+      console.log(count);
+      count < 14 && setShowNotice(true);
+    }
+  };
+
   return (
     <div className="sudo-container">
       {loading ? (
@@ -105,6 +179,11 @@ const Student = ({ vaxStatsList, genderList }) => {
           ) : (
             <Fragment>
               <div id="navLeft" className="sudo-left">
+                <div className="nav-collapse">
+                  <div onClick={toggleLeftBar} className="nav-collapse-btn">
+                    <i className="fas fa-times"></i>
+                  </div>
+                </div>
                 <div className="sudo-left-header">
                   <div className="img-top">
                     <img className="logo-top" src={PsuLogo} alt="logo" />
@@ -196,7 +275,19 @@ const Student = ({ vaxStatsList, genderList }) => {
                         className="side-button"
                       >
                         <i className="text-danger fas fa-prescription me-3"></i>
-                        Health Status
+                        I'm Covid Positive
+                      </div>
+                    </li>
+                    <li className="list-group-item px-4 border-0">
+                      <div
+                        onClick={(e) => {
+                          toggleActive(e);
+                          setNegative(true);
+                        }}
+                        className="side-button"
+                      >
+                        <i className="text-success fas fa-hand-holding-heart me-3"></i>
+                        Negative Test Result
                       </div>
                     </li>
                   </ul>
@@ -235,12 +326,16 @@ const Student = ({ vaxStatsList, genderList }) => {
                     <span>PSU-Trace</span>
                   </div> */}
                   <div
-                    onClick={() => alert()}
+                    onClick={() => notifyToggler()}
                     className="notification-link d-flex align-items-center"
                   >
                     <i className="fas fa-bell me-2 "></i>
                     <span>Notification</span>
-                    <span className="notification-counter mx-2">1</span>
+                    {newNotificationCounter > 0 && (
+                      <span className="notification-counter mx-2">
+                        {newNotificationCounter}
+                      </span>
+                    )}
                   </div>
                   <div className="burger-menu  d-flex justify-content-end align-items-center">
                     <div onClick={toggleLeftBar} className="burger-bars p-3">
@@ -248,8 +343,52 @@ const Student = ({ vaxStatsList, genderList }) => {
                     </div>
                   </div>
                 </div>
+                {/* ======Notify Card====== */}
+                <div
+                  className={`notifications-pop-section ${
+                    hideNotify && "hide-notify"
+                  }`}
+                >
+                  <div className="notification-pop-block">
+                    <div className="notification-pop-header border-bottom">
+                      <span
+                        onClick={() => {
+                          notifyToggler();
+                          sendUpdateRequest(accountInfo._id);
+                          loadNotifications(accountInfo.id);
+                        }}
+                        className="pop-closer"
+                      >
+                        <i className="fas fa-times"></i>
+                      </span>
+                    </div>
+                    {notifications.length > 0 ? (
+                      notifications.map((note) => (
+                        <div
+                          key={note._id}
+                          className="notification-pop-list bg-light"
+                        >
+                          {" "}
+                          <i className="fas fa-bell text-warning fw-bold me-2"></i>
+                          {note.text}
+                          <div className="notif-date mt-2  fw-bold">
+                            {dateFormatter(note.dateSent)}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="fst-italic p-4 fw-bold">
+                        No Notifications Yet
+                      </div>
+                    )}
+                  </div>
+                </div>
                 {profile && (
-                  <div className="sudo-right-main override ">
+                  // super-admin-css
+                  <div
+                    className={`sudo-right-main override notify-override 
+                    }`}
+                  >
                     {/* <SvgDisplay /> */}
                     <div className="profile-container">
                       <div className="student-main">
@@ -268,6 +407,7 @@ const Student = ({ vaxStatsList, genderList }) => {
                                 <div className="profile-id-display">
                                   {accountInfo.idNumber}
                                 </div>
+
                                 <div className="profile-status mt-4 ">
                                   {accountInfo.allowed ? (
                                     <div className="status-content text-success">
@@ -281,6 +421,19 @@ const Student = ({ vaxStatsList, genderList }) => {
                                     </div>
                                   )}
                                 </div>
+                                {showNotice && (
+                                  <div
+                                    className="border  notice-stats p-2 rounded text-warning"
+                                    style={{
+                                      fontSize: ".9rem",
+                                      fontWeight: "500",
+                                      maxWidth: "300px",
+                                    }}
+                                  >
+                                    You've been identified as close contact in
+                                    the last 14 days.
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -303,6 +456,7 @@ const Student = ({ vaxStatsList, genderList }) => {
                 {scan && <Scanner accountInfo={accountInfo} />}
                 {movements && <Movement accountInfo={accountInfo} />}
                 {positive && <Positive accountInfo={accountInfo} />}
+                {negative && <Negative accountInfo={accountInfo} />}
               </div>
             </Fragment>
           )}

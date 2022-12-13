@@ -1,20 +1,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const ThreadsTable = ({
-  data,
-  showInteractions,
-  api,
-  roles,
-  showMsgProof,
-  campus,
-}) => {
+const NewThreadsTable = ({ data, showInteractions, api, roles, campus }) => {
   const [cases, setCases] = useState([]);
   const [url] = useState(process.env.REACT_APP_URL);
 
   useEffect(() => {
     loadCases();
-    console.log(data);
   }, []);
 
   const getRole = (id) => {
@@ -48,17 +40,6 @@ const ThreadsTable = ({
     });
 
     return data;
-  };
-
-  const casesChecker = (id) => {
-    let traced = true;
-
-    cases.forEach((cs) => {
-      if (cs.report === id) {
-        traced = false;
-      }
-    });
-    return traced;
   };
 
   return (
@@ -110,15 +91,11 @@ const ThreadsTable = ({
             <td>{list.accountOwner.username}</td>
             <td>{dateFormatter(list.dateSent)}</td>
             <td>
-              {casesChecker(list._id) ? (
-                <div className="text-success">Traced</div>
-              ) : (
-                <div className="text-danger">Untraced</div>
-              )}
+              <div className="text-danger">Untraced</div>
             </td>
             <td className="text-center">
               <button
-                onClick={() => showInteractions(list.accountOwner, list._id)}
+                onClick={() => showInteractions(list.accountOwner)}
                 className="btn btn-primary"
               >
                 Details
@@ -131,4 +108,4 @@ const ThreadsTable = ({
   );
 };
 
-export default ThreadsTable;
+export default NewThreadsTable;
