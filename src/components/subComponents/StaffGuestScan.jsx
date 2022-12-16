@@ -363,6 +363,8 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
                 onError={handleError}
                 onScan={handleScan}
                 onResult={showResult}
+                key={"environment"}
+                constraints={{ facingMode: "environment" }}
               />
             </Fragment>
           )}
