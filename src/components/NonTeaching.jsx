@@ -159,7 +159,7 @@ const NonTeaching = () => {
                         className="side-button"
                       >
                         <i className="fas fa-vector-square me-3"></i>Location
-                        Scanner
+                        Scanner1
                       </div>
                     </li>
                     {isEntrance && (
