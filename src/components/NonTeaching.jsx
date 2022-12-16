@@ -28,6 +28,7 @@ const NonTeaching = () => {
   const [api] = useState(process.env.REACT_APP_API_SERVER);
   const [allowed, setAllowed] = useState(false);
   const [scan, setScan] = useState(false);
+  const [isEntrance, setIsEntrance] = useState(false);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -46,7 +47,14 @@ const NonTeaching = () => {
   }, [updated]);
 
   const checkAssigned = async (account) => {
+    const entrance = "Entrance";
     const data = await fetchAssignedRoom(account);
+    if (Object.keys(data).length > 0) {
+      setIsEntrance(
+        data.room.description.toString().toLowerCase() ===
+          entrance.toLowerCase()
+      );
+    }
     setAssignedRoom(data);
   };
 
@@ -154,17 +162,19 @@ const NonTeaching = () => {
                         Scanner
                       </div>
                     </li>
-                    <li className="list-group-item px-4 border-0">
-                      <div
-                        onClick={(e) => {
-                          resetState(e);
-                          setWalkIn(true);
-                        }}
-                        className="side-button"
-                      >
-                        <i className="fas fa-walking me-3"></i>Walk In
-                      </div>
-                    </li>
+                    {isEntrance && (
+                      <li className="list-group-item px-4 border-0">
+                        <div
+                          onClick={(e) => {
+                            resetState(e);
+                            setWalkIn(true);
+                          }}
+                          className="side-button"
+                        >
+                          <i className="fas fa-walking me-3"></i>Walk In
+                        </div>
+                      </li>
+                    )}
                   </ul>
                 </div>
                 <div className="links-bottom mt-5">
