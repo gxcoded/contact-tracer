@@ -9,7 +9,7 @@
 .reader-container {
   position: relative;
   background: red;
-  min-width: 500px;
+  min-width: 600px;
   height: 500px;
   border-radius: 20px;
   overflow: hidden;
