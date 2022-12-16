@@ -112,6 +112,7 @@ const StaffGuestScan = ({ accountInfo, assignedRoom }) => {
       };
       request();
       setHideResult(false);
+      setScan(false);
     }
   };
 
