@@ -51,7 +51,7 @@ const ReportPositive = ({ accountInfo }) => {
   };
 
   const fetchAdminInfo = async () => {
-    const { data } = await axios.post(`${url}/getAdminAccount`, {
+    const { data } = await axios.post(`${url}/getNurseAccount`, {
       campus: accountInfo.campus._id,
     });
 
@@ -91,6 +91,7 @@ const ReportPositive = ({ accountInfo }) => {
           formData.append("message", message);
           formData.append("adminNumber", adminInfo.phoneNumber);
           formData.append("adminEmail", adminInfo.email);
+          formData.append("accountId", adminInfo._id);
 
           try {
             const res = await axios.post(`${url}/reportPositive`, formData, {

@@ -8,6 +8,7 @@ import ManualLog from "./subComponents/ManualLog";
 import CredentialsPage from "./subComponents/CredentialsPage";
 import BounceLoader from "react-spinners/BounceLoader";
 import WalkIn from "./subComponents/WalkIn";
+import Scanner from "./subComponents/Scanner";
 import { useState, useEffect, Fragment } from "react";
 import LoggedOut from "./LoggedOut";
 import axios from "axios";
@@ -25,6 +26,8 @@ const NonTeaching = () => {
   const [walkIn, setWalkIn] = useState(false);
   const [assignedRoom, setAssignedRoom] = useState({});
   const [api] = useState(process.env.REACT_APP_API_SERVER);
+  const [allowed, setAllowed] = useState(false);
+  const [scan, setScan] = useState(false);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -57,13 +60,11 @@ const NonTeaching = () => {
   const reloadPage = () => {
     setUpdated(!updated);
   };
+
   //get account Information
   const getInfo = async () => {
     const id = localStorage.getItem("ctIdToken");
-    const response = await axios.post(
-      "http://localhost:5000/ct-api/accountInfo",
-      { id: id }
-    );
+    const response = await axios.post(`${url}/accountInfo`, { id: id });
 
     return await response.data;
   };
@@ -75,6 +76,7 @@ const NonTeaching = () => {
     setManual(false);
     setCredentials(false);
     setWalkIn(false);
+    setScan(false);
     document.querySelectorAll(".side-button").forEach((button) => {
       button.classList.remove("activ");
     });
@@ -138,6 +140,18 @@ const NonTeaching = () => {
                         className="side-button activ"
                       >
                         <i className="fas fa-qrcode me-3"></i>Scanner
+                      </div>
+                    </li>
+                    <li className="list-group-item px-4 border-0">
+                      <div
+                        onClick={(e) => {
+                          resetState(e);
+                          setScan(true);
+                        }}
+                        className="side-button"
+                      >
+                        <i className="fas fa-vector-square me-3"></i>Location
+                        Scanner
                       </div>
                     </li>
                     <li className="list-group-item px-4 border-0">
@@ -217,6 +231,7 @@ const NonTeaching = () => {
                       reloadPage={reloadPage}
                     />
                   )}
+                  {scan && <Scanner accountInfo={accountInfo} />}
                   {manual && <ManualLog type={"2"} area="" />}
                   {credentials && <CredentialsPage accountInfo={accountInfo} />}
                 </div>

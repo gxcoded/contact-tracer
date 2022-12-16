@@ -299,7 +299,7 @@ const ReportHistory = ({ accountInfo }) => {
                 </div>
                 <hr />
                 <div className="sent-message-text">{msg.message}</div>
-                <div className="sent-message-reply-section">
+                {/* <div className="sent-message-reply-section">
                   {msg.reply.length > 0 ? (
                     <div className="admin-reply">
                       <div className="admin-reply-msg">{msg.reply}</div>
@@ -312,7 +312,7 @@ const ReportHistory = ({ accountInfo }) => {
                       School Nurse has no reply yet..
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
             {/* <div className="msg-neg-stats bg-light">

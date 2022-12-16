@@ -27,8 +27,11 @@ const SchoolAdmin = () => {
   const [currentState, setCurrentState] = useState(true);
   const [showMap, setShowMap] = useState(true);
   const [notification, setNotification] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const [chat, setChat] = useState(false);
   const [newChatCount, setNewChatCount] = useState(0);
+  const [newNotificationCounter, setNewNotificationCounter] = useState(0);
+  const [hideNotify, setHideNotify] = useState(true);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
@@ -40,6 +43,7 @@ const SchoolAdmin = () => {
       setAccountInfo(info);
       loadNewChats(info);
       setRoles(fetchedRoles);
+      loadNotifications(info._id);
 
       // setInterval(() => {
       //   msgReload(info.campus._id);
@@ -53,6 +57,61 @@ const SchoolAdmin = () => {
     }, 2000);
   }, []);
 
+  const notifyToggler = () => {
+    setHideNotify(!hideNotify);
+  };
+
+  // notifications
+  const loadNotifications = async (id) => {
+    const notificationList = await fetchNotifications(id);
+
+    setNotifications(notificationList);
+    countNewNotifications(notificationList);
+  };
+
+  const fetchNotifications = async (id) => {
+    const { data } = await axios.post(`${url}/getMyNotifications`, {
+      id,
+    });
+
+    console.log(id);
+    return data;
+  };
+
+  const countNewNotifications = (notes) => {
+    let counter = 0;
+    notes.forEach((note) => {
+      if (!note.seen) {
+        console.log("Note");
+        counter++;
+        setNewNotificationCounter(counter);
+      }
+    });
+    setNewNotificationCounter(counter);
+  };
+  const sendUpdateRequest = async (id) => {
+    const updated = await updateNotificationStatus(id);
+    loadNotifications(accountInfo._id);
+  };
+
+  const updateNotificationStatus = async (id) => {
+    const { data } = await axios.post(`${url}/updateNotificationStatus`, {
+      id,
+    });
+
+    return data;
+  };
+
+  const dateFormatter = (timeString) => {
+    const date = new Date(Number(timeString)).toString().slice(4, 15);
+    const time = new Date(Number(timeString)).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    return `${date} ${time}`;
+  };
   //chat count
   const loadNewChats = async (info) => {
     const total = await fetchNewChats(info);
@@ -253,16 +312,16 @@ const SchoolAdmin = () => {
                 )}
                 <div className="sudo-right-top sa-right-top">
                   <div
-                    // onClick={() => msgToggler()}
+                    onClick={() => notifyToggler()}
                     className={`notification-link d-flex align-items-center ${
-                      messages.length > 0 && "bold-notif"
+                      newNotificationCounter > 0 && "bold-notif"
                     }`}
                   >
                     <i className="fas fa-bell me-2 "></i>
                     <span>Notification</span>
-                    {messages.length > 0 && (
+                    {newNotificationCounter > 0 && (
                       <span className="notification-counter mx-2">
-                        {messages.length}
+                        {newNotificationCounter}
                       </span>
                     )}
                   </div>
@@ -270,6 +329,46 @@ const SchoolAdmin = () => {
                     <div onClick={toggleLeftBar} className="burger-bars p-3">
                       <i className="fas fa-bars"></i>
                     </div>
+                  </div>
+                </div>
+                {/* ======Notify Card====== */}
+                <div
+                  className={`notifications-pop-section ${
+                    hideNotify && "hide-notify"
+                  }`}
+                >
+                  <div className="notification-pop-block">
+                    <div className="notification-pop-header border-bottom">
+                      <span
+                        onClick={() => {
+                          notifyToggler();
+                          sendUpdateRequest(accountInfo._id);
+                          loadNotifications(accountInfo.id);
+                        }}
+                        className="pop-closer"
+                      >
+                        <i className="fas fa-times"></i>
+                      </span>
+                    </div>
+                    {notifications.length > 0 ? (
+                      notifications.map((note) => (
+                        <div
+                          key={note._id}
+                          className="notification-pop-list bg-light"
+                        >
+                          {" "}
+                          <i className="fas fa-bell text-warning fw-bold me-2"></i>
+                          {note.text}
+                          <div className="notif-date mt-2  fw-bold">
+                            {dateFormatter(note.dateSent)}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="fst-italic p-4 fw-bold">
+                        No Notifications Yet
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="sudo-right-main">

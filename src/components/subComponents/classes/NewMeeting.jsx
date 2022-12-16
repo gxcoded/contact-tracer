@@ -73,7 +73,7 @@ const NewMeeting = ({ room, onGoing, loadMeeting, modalToggler }) => {
   };
 
   const fetchRooms = async () => {
-    const { data } = await axios.post(`${url}/roomList`, {
+    const { data } = await axios.post(`${url}/classRoomList`, {
       campus: room.campus,
     });
     return data;
@@ -301,7 +301,7 @@ const NewMeeting = ({ room, onGoing, loadMeeting, modalToggler }) => {
           {checkOngoing() && (
             <button
               onClick={(e) => {
-                modalToggler(onGoing._id);
+                modalToggler(onGoing._id, room._id);
               }}
               className={`btn-sm meeting-nav bg-danger text-light`}
             >

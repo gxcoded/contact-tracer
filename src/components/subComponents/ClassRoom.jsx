@@ -21,6 +21,7 @@ const ClassRoom = ({ room, options }) => {
   const [meeting, setMeeting] = useState("");
   const [student, setStudent] = useState("");
   const [reload, setReload] = useState(false);
+  const [currentRoomId, setCurrentRoomId] = useState("");
 
   useEffect(() => {
     loadStudents();
@@ -55,8 +56,9 @@ const ClassRoom = ({ room, options }) => {
     setAttendance(false);
   };
 
-  const modalToggler = (id) => {
+  const modalToggler = (id, roomId) => {
     setOnGoing(id);
+    setCurrentRoomId(roomId);
     setShowExModal(!showExModal);
   };
 
@@ -86,6 +88,7 @@ const ClassRoom = ({ room, options }) => {
 
   const sendExcuse = async () => {
     const { data } = await axios.post(`${url}/addExcuse`, {
+      currentRoomId,
       meeting,
       student,
       remarks: remarkText,
@@ -131,6 +134,7 @@ const ClassRoom = ({ room, options }) => {
           remarkText={remarkText}
           classStudents={classStudents}
           onGoing={onGoing}
+          currentRoomId={currentRoomId}
           room={room}
           modalToggler={modalToggler}
           remarksToggler={remarksToggler}

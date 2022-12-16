@@ -3,7 +3,13 @@ import { Fragment, useEffect, useState } from "react";
 import swal from "sweetalert";
 import axios from "axios";
 
-const ModalTable = ({ data, onGoing, remarksToggler, reload }) => {
+const ModalTable = ({
+  data,
+  onGoing,
+  remarksToggler,
+  reload,
+  currentRoomId,
+}) => {
   const [sortedList, setSortedList] = useState([]);
   const [excuseList, setExcuseList] = useState([]);
   const [url] = useState(process.env.REACT_APP_URL);

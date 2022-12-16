@@ -13,6 +13,7 @@ const AttendanceReport = () => {
   const [students, setStudents] = useState();
   const [preview, setPreview] = useState(true);
   const [filteredMeetings, setFilteredMeeting] = useState([]);
+  const [excusedList, setExcusedList] = useState([]);
   const [loggedIn, setLoggedIn] = useState(
     localStorage.getItem("ctIdToken") !== null
   );
@@ -25,13 +26,29 @@ const AttendanceReport = () => {
   useEffect(() => {
     if (printable) {
       const printInfo = JSON.parse(localStorage.getItem("printInfo"));
-      console.log(printInfo);
+
       setPrintDetails(printInfo);
       loadMeetingList();
       loadStudents();
+      loadExcusedStudents(printInfo.room);
     }
     // loggedIn && window.print();
   }, []);
+
+  // ======excuses
+
+  const loadExcusedStudents = async (room) => {
+    const excused = await fetchExcusedStudents(room);
+    setExcusedList(excused);
+  };
+
+  const fetchExcusedStudents = async (room) => {
+    const { data } = await axios.post(`${url}/getExcusedStudents`, {
+      classRoomId: room,
+    });
+    console.log(data);
+    return data;
+  };
 
   const printNow = () => {
     setPreview(false);
@@ -152,6 +169,14 @@ const AttendanceReport = () => {
         console.log(a.start);
       }
     });
+
+    excusedList.forEach((ex) => {
+      if (ex.student === s && ex.meeting === m) {
+        isPresent.present = "Excused";
+        isPresent.remarks = ex.remarks;
+      }
+    });
+
     return isPresent;
   };
 

@@ -29,6 +29,10 @@ const RoomList = ({ campus }) => {
     { description: "2nd Floor" },
     { description: "3rd Floor" },
     { description: "4th Floor" },
+    { description: "5th Floor" },
+    { description: "6th Floor" },
+    { description: "7th Floor" },
+    { description: "8th Floor" },
   ]);
 
   const [description, setDescription] = useState("");

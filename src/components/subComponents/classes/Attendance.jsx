@@ -16,11 +16,14 @@ const Attendance = ({ room }) => {
   const [url] = useState(process.env.REACT_APP_URL);
   const [headers, setHeaders] = useState([]);
   const [dataContent, setDataContent] = useState([]);
+  const [excusedList, setExcusedList] = useState([]);
+
   let arrayList = [];
 
   useEffect(() => {
     loadMeetingList();
     loadStudents();
+    loadExcusedStudents();
     localStorage.removeItem("printInfo");
   }, []);
 
@@ -38,6 +41,21 @@ const Attendance = ({ room }) => {
       classId: room._id,
     });
 
+    return data;
+  };
+
+  // ======excuses
+
+  const loadExcusedStudents = async () => {
+    const excused = await fetchExcusedStudents();
+    setExcusedList(excused);
+  };
+
+  const fetchExcusedStudents = async () => {
+    const { data } = await axios.post(`${url}/getExcusedStudents`, {
+      classRoomId: room._id,
+    });
+    console.log(data);
     return data;
   };
 
@@ -90,14 +108,27 @@ const Attendance = ({ room }) => {
   };
 
   const checker = (s, m) => {
-    let isPresent = false;
+    let status = {
+      isPresent: false,
+      isExcused: false,
+      remarks: "",
+    };
 
     attendance.forEach((a) => {
       if (a.accountScanned === s && a.meeting === m) {
-        isPresent = true;
+        status.isPresent = true;
       }
     });
-    return isPresent;
+
+    excusedList.forEach((ex) => {
+      if (ex.student === s && ex.meeting === m) {
+        console.log(ex.meeting);
+        status.isExcused = true;
+        status.remarks = ex.remarks;
+      }
+    });
+
+    return status;
   };
 
   const csvChecker = (s, m) => {
@@ -199,12 +230,13 @@ const Attendance = ({ room }) => {
 
       file.forEach((f) => {
         // console.log(attendance);
-        stud[new Date(Number(f.date)).toString()] = checker(
-          s.student._id,
-          f._id
-        )
-          ? "1"
-          : "0";
+        if (checker(s.student._id, f._id).isPresent) {
+          stud[new Date(Number(f.date)).toString()] = "1";
+        } else if (checker(s.student._id, f._id).isExcused) {
+          stud[new Date(Number(f.date)).toString()] = "2";
+        } else {
+          stud[new Date(Number(f.date)).toString()] = "0";
+        }
       });
 
       headersArray[1].push(stud);
@@ -212,13 +244,15 @@ const Attendance = ({ room }) => {
 
     const space = { idNumber: "" };
     const guide = { idNumber: "LEGEND / GUIDE" };
-    const present = { idNumber: "1 = Present" };
     const absent = { idNumber: "0 = Absent" };
+    const present = { idNumber: "1 = Present" };
+    const excused = { idNumber: "2 = Excused" };
 
     headersArray[1].push(space);
     headersArray[1].push(guide);
-    headersArray[1].push(present);
     headersArray[1].push(absent);
+    headersArray[1].push(present);
+    headersArray[1].push(excused);
 
     return headersArray;
   };
@@ -345,15 +379,26 @@ const Attendance = ({ room }) => {
                         key={list._id}
                         className="record-dates-column text-center border"
                       >
-                        {checker(l.student._id, list._id) ? (
+                        {checker(l.student._id, list._id).isPresent && (
                           <div className="present">
                             <i className="fas fa-check"></i>
                           </div>
-                        ) : (
-                          <div className="absent">
-                            <i className="fas fa-times"></i>
+                        )}
+                        {checker(l.student._id, list._id).isExcused && (
+                          <div className="excused">
+                            <span className="fw-bold fst-normal">Excused</span>
+                            <div className="" style={{ fontSize: ".6rem" }}>
+                              {checker(l.student._id, list._id).remarks}
+                            </div>
                           </div>
                         )}
+
+                        {!checker(l.student._id, list._id).isPresent &&
+                          !checker(l.student._id, list._id).isExcused && (
+                            <div className="absent">
+                              <i className="fas fa-times"></i>
+                            </div>
+                          )}
                       </div>
                     ))}
                   </div>

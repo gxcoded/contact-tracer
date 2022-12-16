@@ -93,7 +93,7 @@ const Classes = ({ accountInfo }) => {
   };
 
   const fetchRooms = async () => {
-    const { data } = await axios.post(`${url}/roomList`, {
+    const { data } = await axios.post(`${url}/classRoomList`, {
       campus: accountInfo.campus._id,
     });
     return data;

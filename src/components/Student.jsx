@@ -162,7 +162,7 @@ const Student = ({ vaxStatsList, genderList }) => {
         (now - Number(notification[0].dateSent)) / 86400000
       );
       console.log(count);
-      count < 14 && setShowNotice(true);
+      count < 7 && setShowNotice(true);
     }
   };
 
@@ -431,7 +431,11 @@ const Student = ({ vaxStatsList, genderList }) => {
                                     }}
                                   >
                                     You've been identified as close contact in
-                                    the last 14 days.
+                                    the last 7 days. If you feel any symptoms of
+                                    COVID-19 within the next few days, you are
+                                    advised to take a COVID-19 Test.
+                                    <br />
+                                    This notification will disappear in 7 days.
                                   </div>
                                 )}
                               </div>

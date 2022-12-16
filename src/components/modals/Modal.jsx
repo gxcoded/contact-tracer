@@ -9,6 +9,7 @@ const ExcuseModal = ({
   modalToggler,
   room,
   onGoing,
+  currentRoomId,
   remarksToggler,
   reload,
 }) => {
@@ -44,6 +45,7 @@ const ExcuseModal = ({
               reload={reload}
               onGoing={onGoing}
               data={classStudents}
+              currentRoomId={currentRoomId}
               remarksToggler={remarksToggler}
             />
           ) : (
