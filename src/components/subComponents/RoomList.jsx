@@ -23,16 +23,20 @@ const RoomList = ({ campus }) => {
   const [currentLng, setCurrentLng] = useState(0);
   const [defaultLat, setDefaultLat] = useState(0);
   const [defaultLng, setDefaultLng] = useState(0);
+  const [iconBase] = useState("http://maps.google.com/mapfiles/ms/icons");
 
   const [floors] = useState([
-    { description: "Ground Floor" },
-    { description: "2nd Floor" },
-    { description: "3rd Floor" },
-    { description: "4th Floor" },
-    { description: "5th Floor" },
-    { description: "6th Floor" },
-    { description: "7th Floor" },
-    { description: "8th Floor" },
+    {
+      description: "Ground Floor",
+      icon: `${iconBase}/red-dot.png`,
+    },
+    { description: "2nd Floor", icon: `${iconBase}/blue-dot.png` },
+    { description: "3rd Floor", icon: `${iconBase}/green-dot.png` },
+    { description: "4th Floor", icon: `${iconBase}/orange-dot.png` },
+    { description: "5th Floor", icon: `${iconBase}/yellow-dot.png` },
+    { description: "6th Floor", icon: `${iconBase}/pink-dot.png` },
+    { description: "7th Floor", icon: `${iconBase}/purple-dot.png` },
+    { description: "8th Floor", icon: "" },
   ]);
 
   const [description, setDescription] = useState("");

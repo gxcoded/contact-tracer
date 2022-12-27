@@ -50,10 +50,10 @@ const TraceAll = ({
     const gap = Math.floor(
       (Number(customDate) - Number(defaultTest)) / 86400000
     );
-    let limit = gap + 7;
+    let limit = gap + 14;
 
-    if (limit < 7) {
-      limit = 7;
+    if (limit < 14) {
+      limit = 14;
     }
     const lastStamp = limit * 86400000;
     const lastDate = Number(customDate) - Number(lastStamp);

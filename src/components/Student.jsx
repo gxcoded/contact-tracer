@@ -15,6 +15,7 @@ import Positive from "./subComponents/Positive";
 import Negative from "./subComponents/Negative";
 import Scanner from "./subComponents/Scanner";
 import ChatNurse from "./subComponents/ChatNurse";
+import Pop from "./modals/Pop";
 import swal from "sweetalert";
 
 const Student = ({ vaxStatsList, genderList }) => {
@@ -35,23 +36,32 @@ const Student = ({ vaxStatsList, genderList }) => {
   const [notifications, setNotifications] = useState([]);
   const [newNotificationCounter, setNewNotificationCounter] = useState(0);
   const [showNotice, setShowNotice] = useState(false);
+  const [showPopModal, setShowPopModal] = useState(false);
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
-
-    const fetchInfo = async () => {
-      const info = await getInfo();
-      console.log(info);
-      setAccountInfo(info);
-      isAllowed(info._id);
-      loadNotifications(info._id);
-    };
 
     fetchInfo();
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   }, []);
+
+  const fetchInfo = async () => {
+    const info = await getInfo();
+    console.log(info);
+    setAccountInfo(info);
+    isAllowed(info._id);
+    loadNotifications(info._id);
+  };
+
+  const reloadAccountInfo = () => {
+    fetchInfo();
+  };
+
+  const popModalToggler = () => {
+    setShowPopModal(!showPopModal);
+  };
 
   const notifyToggler = () => {
     setHideNotify(!hideNotify);
@@ -168,6 +178,13 @@ const Student = ({ vaxStatsList, genderList }) => {
 
   return (
     <div className="sudo-container">
+      {showPopModal && (
+        <Pop
+          accountInfo={accountInfo}
+          popModalToggler={popModalToggler}
+          reloadAccountInfo={reloadAccountInfo}
+        />
+      )}
       {loading ? (
         <div className="spinner border loader-effect">
           <BounceLoader color="#5dcea1" loading={loading} size={150} />
@@ -249,7 +266,7 @@ const Student = ({ vaxStatsList, genderList }) => {
                         }}
                         className="side-button"
                       >
-                        <i className="fas fa-history me-3"></i>Movements
+                        <i className="fas fa-history me-3"></i>Logs
                       </div>
                     </li>
                     <li className="list-group-item px-4 border-0">
@@ -397,9 +414,10 @@ const Student = ({ vaxStatsList, genderList }) => {
                             <div className="profile-upper-section">
                               <div className="profile-name">
                                 <img
+                                  onClick={() => popModalToggler()}
                                   src={`${api}/${accountInfo.image}`}
                                   alt="profile"
-                                  className="profile-image"
+                                  className="profile-image pointer"
                                 />
                                 <div className="profile-text-display">
                                   {`${accountInfo.firstName} ${accountInfo.lastName}`}

@@ -25,6 +25,8 @@ import Assign from "./subComponents/Assign";
 import Messages from "./subComponents/notify/Messages";
 import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
+import AccountInfo from "./subComponents/AccountInfo";
+import Pop from "./modals/Pop";
 
 const SchoolAdmin = () => {
   const [url] = useState(process.env.REACT_APP_URL);
@@ -60,6 +62,12 @@ const SchoolAdmin = () => {
   const [currentPerson, setCurrentPerson] = useState({});
   const [currentState, setCurrentState] = useState(true);
   const [showMap, setShowMap] = useState(true);
+  const [accountSettings, setAccountSettings] = useState(false);
+  const [showPopModal, setShowPopModal] = useState(false);
+
+  const popModalToggler = () => {
+    setShowPopModal(!showPopModal);
+  };
 
   useEffect(() => {
     const date = new Date().toISOString().slice(0, 10);
@@ -69,25 +77,29 @@ const SchoolAdmin = () => {
     console.log(new Date(1670198400000 - 28800000));
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
 
-    const fetchInfo = async () => {
-      const info = await getInfo();
-      const fetchedCourses = await fetchCourses(info.campus._id);
-      const fetchedRoles = await fetchRoles();
-
-      setAccountInfo(info);
-      setCourseList(fetchedCourses);
-      setRoles(fetchedRoles);
-
-      // setInterval(() => {
-      //   msgReload(info.campus._id);
-      // }, 1000);
-    };
     fetchInfo();
 
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   }, []);
+
+  const reloadAccountInfo = () => {
+    fetchInfo();
+  };
+  const fetchInfo = async () => {
+    const info = await getInfo();
+    const fetchedCourses = await fetchCourses(info.campus._id);
+    const fetchedRoles = await fetchRoles();
+
+    setAccountInfo(info);
+    setCourseList(fetchedCourses);
+    setRoles(fetchedRoles);
+
+    // setInterval(() => {
+    //   msgReload(info.campus._id);
+    // }, 1000);
+  };
 
   //messages
 
@@ -176,12 +188,20 @@ const SchoolAdmin = () => {
     setOffices(false);
     setChairs(false);
     setAssign(false);
+    setAccountSettings(false);
   };
   const toggleLeftBar = () => {
     document.querySelector("#navLeft").classList.toggle("shown");
   };
   return (
     <div className="sudo-container school-admin-container">
+      {showPopModal && (
+        <Pop
+          accountInfo={accountInfo}
+          popModalToggler={popModalToggler}
+          reloadAccountInfo={reloadAccountInfo}
+        />
+      )}
       {/* {showMap && <MapContainer mapToggler={mapToggler} />} */}
       {loading ? (
         <div className="spinner border loader-effect">
@@ -425,6 +445,17 @@ const SchoolAdmin = () => {
                       <div
                         onClick={(e) => {
                           toggleActive(e);
+                          setAccountSettings(true);
+                        }}
+                        className="side-button"
+                      >
+                        <i className="fas fa-user-cog me-3"></i>Account Info
+                      </div>
+                    </li>
+                    <li className="list-group-item px-4 border-0">
+                      <div
+                        onClick={(e) => {
+                          toggleActive(e);
                           setCredentials(true);
                         }}
                         className="side-button"
@@ -487,6 +518,13 @@ const SchoolAdmin = () => {
                   )} */}
                   {dashboard && (
                     <SchoolAdminDashboard accountInfo={accountInfo} />
+                  )}
+                  {accountSettings && (
+                    <AccountInfo
+                      popModalToggler={popModalToggler}
+                      accountInfo={accountInfo}
+                      reloadAccountInfo={reloadAccountInfo}
+                    />
                   )}
                   {departments && (
                     <Departments campus={accountInfo.campus._id} />

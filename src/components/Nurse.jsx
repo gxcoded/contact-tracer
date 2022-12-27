@@ -11,6 +11,8 @@ import MapContainer from "./map/MapContainer";
 import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import Chats from "./subComponents/Chats";
+import AccountInfo from "./subComponents/AccountInfo";
+import Pop from "./modals/Pop";
 
 const SchoolAdmin = () => {
   const [url] = useState(process.env.REACT_APP_URL);
@@ -32,23 +34,15 @@ const SchoolAdmin = () => {
   const [newChatCount, setNewChatCount] = useState(0);
   const [newNotificationCounter, setNewNotificationCounter] = useState(0);
   const [hideNotify, setHideNotify] = useState(true);
+  const [accountSettings, setAccountSettings] = useState(false);
+  const [showPopModal, setShowPopModal] = useState(false);
+
+  const popModalToggler = () => {
+    setShowPopModal(!showPopModal);
+  };
 
   useEffect(() => {
     localStorage.getItem("ctIdToken") !== null && setLoggedIn(true);
-
-    const fetchInfo = async () => {
-      const info = await getInfo();
-      const fetchedRoles = await fetchRoles();
-
-      setAccountInfo(info);
-      loadNewChats(info);
-      setRoles(fetchedRoles);
-      loadNotifications(info._id);
-
-      // setInterval(() => {
-      //   msgReload(info.campus._id);
-      // }, 1000);
-    };
 
     fetchInfo();
 
@@ -56,6 +50,22 @@ const SchoolAdmin = () => {
       setLoading(false);
     }, 2000);
   }, []);
+  const fetchInfo = async () => {
+    const info = await getInfo();
+    const fetchedRoles = await fetchRoles();
+
+    setAccountInfo(info);
+    loadNewChats(info);
+    setRoles(fetchedRoles);
+    loadNotifications(info._id);
+
+    // setInterval(() => {
+    //   msgReload(info.campus._id);
+    // }, 1000);
+  };
+  const reloadAccountInfo = () => {
+    fetchInfo();
+  };
 
   const notifyToggler = () => {
     setHideNotify(!hideNotify);
@@ -187,12 +197,20 @@ const SchoolAdmin = () => {
     toggleLeftBar();
     setNotification(false);
     setChat(false);
+    setAccountSettings(false);
   };
   const toggleLeftBar = () => {
     document.querySelector("#navLeft").classList.toggle("shown");
   };
   return (
     <div className="sudo-container school-admin-container">
+      {showPopModal && (
+        <Pop
+          accountInfo={accountInfo}
+          popModalToggler={popModalToggler}
+          reloadAccountInfo={reloadAccountInfo}
+        />
+      )}
       {/* {showMap && <MapContainer mapToggler={mapToggler} />} */}
       {loading ? (
         <div className="spinner border loader-effect">
@@ -279,6 +297,17 @@ const SchoolAdmin = () => {
                     <i className="fas fa-sliders-h me-3"></i>Options
                   </div>
                   <ul className="list-group list-group-light">
+                    <li className="list-group-item px-4 border-0">
+                      <div
+                        onClick={(e) => {
+                          toggleActive(e);
+                          setAccountSettings(true);
+                        }}
+                        className="side-button"
+                      >
+                        <i className="fas fa-user-cog me-3"></i>Account Info
+                      </div>
+                    </li>
                     <li className="list-group-item px-4 border-0">
                       <div
                         onClick={(e) => {
@@ -377,6 +406,13 @@ const SchoolAdmin = () => {
                       campus={accountInfo.campus._id}
                       roles={roles}
                       showMsgProof={showMsgProof}
+                    />
+                  )}
+                  {accountSettings && (
+                    <AccountInfo
+                      popModalToggler={popModalToggler}
+                      accountInfo={accountInfo}
+                      reloadAccountInfo={reloadAccountInfo}
                     />
                   )}
 

@@ -127,9 +127,9 @@ const Movement = ({ accountInfo }) => {
               <table className="table">
                 <thead>
                   <tr>
-                    <td>Room</td>
-                    <td>From</td>
-                    <td>To</td>
+                    <td>Location</td>
+                    <td>In</td>
+                    <td>Out</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -163,7 +163,7 @@ const Movement = ({ accountInfo }) => {
         <div className="movement-main-right">
           <div className="mmr-header">
             {" "}
-            <i className="fas fa-history me-3"></i>Movement History
+            <i className="fas fa-history me-3"></i>Movement Logs
           </div>
           <div className="interaction-starting-date">
             <span>Starting Date</span>
